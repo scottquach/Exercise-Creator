@@ -10,4 +10,18 @@ public class StartMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_menu);
     }
+
+    /*Start morph animation for loading
+    an exercise
+     */
+    private void loadCardMorphAnim(){
+
+    }
+
+    /*Start morph animation for creating
+    a new exercise
+     */
+    private void createCardMorphAnim(){
+
+    }
 }
