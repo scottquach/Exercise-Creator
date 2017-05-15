@@ -110,7 +110,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
     public void createButtonClicked(View view) {
         if (createIsCard){
-            Intent createExercise = new Intent(StartMenuActivity.this, EditModeACtivity.class);
+            Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
             startActivity(createExercise);
         }else{
             createCardAnim();
