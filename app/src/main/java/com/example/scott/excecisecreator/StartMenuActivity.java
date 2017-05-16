@@ -6,8 +6,11 @@ import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.transition.TransitionManager;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 /*
 Research resources used
@@ -21,11 +24,14 @@ public class StartMenuActivity extends AppCompatActivity {
     private ConstraintSet originalConstraint = new ConstraintSet();
     private ConstraintSet applyConstraintSet = new ConstraintSet();
 
-    private CardView loadCard;
-    private CardView createCard;
+    private LinearLayout loadContainer;
+    private LinearLayout createContainer;
 
     private boolean loadIsCard = false;
     private boolean createIsCard = false;
+
+    private Button createButton;
+    private Button loadButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +42,10 @@ public class StartMenuActivity extends AppCompatActivity {
         menuLayout = (ConstraintLayout) findViewById(R.id.StartMenuLayout);
         applyConstraintSet.clone(menuLayout);
         originalConstraint.clone(menuLayout);
-        loadCard = (CardView) findViewById(R.id.loadExerciseCard);
-        createCard = (CardView) findViewById(R.id.createExerciseCard);
+        loadContainer = (LinearLayout) findViewById(R.id.loadExerciseContainer);
+        createContainer = (LinearLayout) findViewById(R.id.createExerciseContainer);
+        createButton = (Button) findViewById(R.id.createButton);
+        loadButton = (Button) findViewById(R.id.loadButton);
     }
 
     /*Start morph animation for loading
@@ -49,8 +57,8 @@ public class StartMenuActivity extends AppCompatActivity {
         applyConstraintSet.centerVertically(R.id.loadExerciseCard, R.id.StartMenuLayout);
         applyConstraintSet.setMargin(R.id.loadExerciseCard,ConstraintSet.TOP,0);
 
-        for (int i = 1; i < loadCard.getChildCount(); i++) {
-            loadCard.getChildAt(i).setVisibility(View.VISIBLE);
+        for (int i = 0; i < loadContainer.getChildCount(); i++) {
+            loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
         applyConstraintSet.applyTo(menuLayout);
@@ -62,9 +70,10 @@ public class StartMenuActivity extends AppCompatActivity {
     private void resetLoadCard(){
         TransitionManager.beginDelayedTransition(menuLayout);
 
-        for (int i = 0; i < loadCard.getChildCount(); i++){
-            loadCard.getChildAt(i).setVisibility(View.GONE);
+        for (int i = 0; i < loadContainer.getChildCount(); i++){
+            loadContainer.getChildAt(i).setVisibility(View.GONE);
         }
+        loadButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);
     }
@@ -76,10 +85,10 @@ public class StartMenuActivity extends AppCompatActivity {
         TransitionManager.beginDelayedTransition(menuLayout);
 
         applyConstraintSet.centerVertically(R.id.createExerciseCard, R.id.StartMenuLayout);
-        applyConstraintSet.setMargin(R.id.loadExerciseCard, ConstraintSet.BOTTOM,0);
+        applyConstraintSet.setMargin(R.id.createExerciseCard, ConstraintSet.BOTTOM,0);
 
-        for (int i = 0; i < createCard.getChildCount(); i++){
-            loadCard.getChildAt(i).setVisibility(View.VISIBLE);
+        for (int i = 0; i < createContainer.getChildCount(); i++){
+            createContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
         applyConstraintSet.applyTo(menuLayout);
@@ -91,9 +100,10 @@ public class StartMenuActivity extends AppCompatActivity {
     private void resetCreateCard(){
         TransitionManager.beginDelayedTransition(menuLayout);
 
-        for (int i = 0; i < createCard.getChildCount(); i++){
-            createCard.getChildAt(i).setVisibility(View.GONE);
+        for (int i = 0; i < createContainer.getChildCount(); i++){
+            createContainer.getChildAt(i).setVisibility(View.GONE);
         }
+        createButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);
     }
