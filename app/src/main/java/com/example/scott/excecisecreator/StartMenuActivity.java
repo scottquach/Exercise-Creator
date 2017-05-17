@@ -76,6 +76,7 @@ public class StartMenuActivity extends AppCompatActivity {
         loadButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);
+        applyConstraintSet.clone(originalConstraint);
     }
 
     /*Start morph animation for creating
@@ -106,6 +107,7 @@ public class StartMenuActivity extends AppCompatActivity {
         createButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);
+        applyConstraintSet.clone(originalConstraint);
     }
 
     public void loadButtonClicked(View view) {
