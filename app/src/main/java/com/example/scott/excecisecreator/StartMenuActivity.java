@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 /*
@@ -33,6 +34,8 @@ public class StartMenuActivity extends AppCompatActivity {
     private Button createButton;
     private Button loadButton;
 
+    private EditText nameEditT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class StartMenuActivity extends AppCompatActivity {
         createContainer = (LinearLayout) findViewById(R.id.createExerciseContainer);
         createButton = (Button) findViewById(R.id.createButton);
         loadButton = (Button) findViewById(R.id.loadButton);
+        nameEditT = (EditText) findViewById(R.id.setNameEditText);
     }
 
     /*Start morph animation for loading
@@ -112,8 +116,13 @@ public class StartMenuActivity extends AppCompatActivity {
 
     public void loadButtonClicked(View view) {
         if(loadIsCard){
-            Intent loadExercise = new Intent(StartMenuActivity.this, ExceriseActivity.class);
-            startActivity(loadExercise);
+            String exerciseName = nameEditT.getText().toString();
+            if (exerciseName.equals("")){
+                nameEditT.setError("Field cannot be blank");
+            }else{
+                Intent loadExercise = new Intent(StartMenuActivity.this, ExceriseActivity.class);
+                startActivity(loadExercise);
+            }
         }else{
             loadCardAnim();
             loadIsCard = true;
