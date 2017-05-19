@@ -131,7 +131,9 @@ public class StartMenuActivity extends AppCompatActivity {
             }else{
                 DataBaseHelper db = new DataBaseHelper(this);
                 db.saveNewExercise(exerciseName);
+
                 Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                createExercise.putExtra("name", exerciseName);
                 startActivity(createExercise);
             }
 
