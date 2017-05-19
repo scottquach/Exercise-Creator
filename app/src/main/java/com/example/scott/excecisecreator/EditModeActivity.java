@@ -23,7 +23,7 @@ public class EditModeActivity extends AppCompatActivity {
             startActivity(exitToHome);
         }
 
-        getSupportActionBar().setTitle("Edit Mode (tb beatified)");
+        getSupportActionBar().setTitle(exerciseName);
     }
 
 }
