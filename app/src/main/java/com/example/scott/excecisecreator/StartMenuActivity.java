@@ -116,13 +116,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
     public void loadButtonClicked(View view) {
         if(loadIsCard){
-            String exerciseName = nameEditT.getText().toString();
-            if (exerciseName.equals("")){
-                nameEditT.setError("Field cannot be blank");
-            }else{
-                Intent loadExercise = new Intent(StartMenuActivity.this, ExceriseActivity.class);
-                startActivity(loadExercise);
-            }
+
         }else{
             loadCardAnim();
             loadIsCard = true;
@@ -131,8 +125,16 @@ public class StartMenuActivity extends AppCompatActivity {
 
     public void createButtonClicked(View view) {
         if (createIsCard){
-            Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
-            startActivity(createExercise);
+            String exerciseName = nameEditT.getText().toString();
+            if (exerciseName.equals("")){
+                nameEditT.setError("Field cannot be blank");
+            }else{
+                DataBaseHelper db = new DataBaseHelper(this);
+                db.saveNewExercise(exerciseName);
+                Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                startActivity(createExercise);
+            }
+
         }else{
             createCardAnim();
             createIsCard = true;
