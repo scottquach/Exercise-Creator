@@ -1,6 +1,7 @@
 package com.example.scott.excecisecreator;
 
 import android.content.Intent;
+import android.icu.text.StringSearch;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /*
 Research resources used
@@ -36,6 +40,8 @@ public class StartMenuActivity extends AppCompatActivity {
 
     private EditText nameEditT;
 
+    private ListView exercisesListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +56,23 @@ public class StartMenuActivity extends AppCompatActivity {
         createButton = (Button) findViewById(R.id.createButton);
         loadButton = (Button) findViewById(R.id.loadButton);
         nameEditT = (EditText) findViewById(R.id.setNameEditText);
+        exercisesListView = (ListView) findViewById(R.id.exercisesListView);
+    }
+
+    /*Returns an ArrayLists of the names of
+    saved exercises
+     */
+    private ArrayList<String> loadNames(){
+        ArrayList<String> names = new ArrayList<String>();
+
+        return names;
+    }
+
+    /*Loads the listview of saved exercises located in
+    the load CardView
+     */
+    private void loadListView(){
+
     }
 
     /*Start morph animation for loading
@@ -123,6 +146,9 @@ public class StartMenuActivity extends AppCompatActivity {
         }
     }
 
+    /*Handle the creation of a new sql table for the
+    exercise, passes name to editMode Activity
+     */
     public void createButtonClicked(View view) {
         if (createIsCard){
             String exerciseName = nameEditT.getText().toString();

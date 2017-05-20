@@ -54,7 +54,9 @@ public class EditModeActivity extends AppCompatActivity {
         recyclerview.setAdapter(adapter);
     }
 
-    private void loadData(){}
+    private void loadData(){
+
+    }
 
 
     private void createTask(){
