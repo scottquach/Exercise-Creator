@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.scott.excecisecreator.EditModeActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/editExerciseRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
+
+
+    </android.support.v7.widget.RecyclerView>
+
     <com.github.clans.fab.FloatingActionMenu
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:menu_fab_size="normal"
+        app:menu_icon="@drawable/ic_add"
+        app:menu_colorNormal="@color/colorPrimary"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp">
 
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="mini"
+            app:menu_colorNormal="@color/colorPrimary"
+            android:src="@drawable/ic_add"
+            android:onClick="createTaskClicked"/>
 
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="mini"
+            app:menu_colorNormal="@color/colorPrimary"
+            android:src="@drawable/ic_add"
+            android:onClick="createPauseClicked"/>
 
 
     </com.github.clans.fab.FloatingActionMenu>
