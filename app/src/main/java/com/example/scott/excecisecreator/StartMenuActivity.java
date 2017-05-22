@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -69,8 +70,15 @@ public class StartMenuActivity extends AppCompatActivity {
      */
     private ArrayList<String> loadNames(){
         ArrayList<String> names = new ArrayList<String>();
+        Cursor cursor = dbHelper.getExerciseNames();
+        if (cursor.moveToFirst()){
+
+        }else{
+            Toast.makeText(this, "Error loading exercise selection", Toast.LENGTH_SHORT).show();
+        }
 
 
+        cursor.close();
         return names;
     }
 
