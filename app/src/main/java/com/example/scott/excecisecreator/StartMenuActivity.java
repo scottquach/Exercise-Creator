@@ -12,10 +12,12 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.transition.TransitionManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -71,8 +73,14 @@ public class StartMenuActivity extends AppCompatActivity {
     private ArrayList<String> loadNames(){
         ArrayList<String> names = new ArrayList<String>();
         Cursor cursor = dbHelper.getExerciseNames();
-        if (cursor.moveToFirst()){
 
+        int count = cursor.getCount();
+
+        if (cursor.moveToFirst()){
+            for(int i = 0; i < count; i++){
+                String exName = cursor.getString(i);
+                names.add(exName);
+            }
         }else{
             Toast.makeText(this, "Error loading exercise selection", Toast.LENGTH_SHORT).show();
         }
@@ -86,7 +94,9 @@ public class StartMenuActivity extends AppCompatActivity {
     the load CardView
      */
     private void loadListView(){
-
+        ArrayList<String> names = loadNames();
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.listview_simple_row, names);
+        exercisesListView.setAdapter(adapter);
     }
 
     /*Start morph animation for loading
@@ -99,6 +109,7 @@ public class StartMenuActivity extends AppCompatActivity {
         applyConstraintSet.setMargin(R.id.loadExerciseCard,ConstraintSet.TOP,0);
 
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
+            loadListView();
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
