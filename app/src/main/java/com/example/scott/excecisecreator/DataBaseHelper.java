@@ -2,6 +2,7 @@ package com.example.scott.excecisecreator;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.ContactsContract;
@@ -48,5 +49,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "task TEXT, break INTEGER)");
 
+    }
+
+    public Cursor getExerciseNames(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT exerciseName FROM " + DATABASE_MASTER,null);
+        return cursor;
     }
 }

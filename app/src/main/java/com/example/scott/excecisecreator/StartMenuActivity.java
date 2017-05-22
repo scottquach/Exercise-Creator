@@ -1,6 +1,8 @@
 package com.example.scott.excecisecreator;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.StringSearch;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -42,6 +44,8 @@ public class StartMenuActivity extends AppCompatActivity {
 
     private ListView exercisesListView;
 
+    private DataBaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,7 @@ public class StartMenuActivity extends AppCompatActivity {
         loadButton = (Button) findViewById(R.id.loadButton);
         nameEditT = (EditText) findViewById(R.id.setNameEditText);
         exercisesListView = (ListView) findViewById(R.id.exercisesListView);
+        dbHelper = new DataBaseHelper(this);
     }
 
     /*Returns an ArrayLists of the names of
@@ -64,6 +69,7 @@ public class StartMenuActivity extends AppCompatActivity {
      */
     private ArrayList<String> loadNames(){
         ArrayList<String> names = new ArrayList<String>();
+
 
         return names;
     }
@@ -155,8 +161,7 @@ public class StartMenuActivity extends AppCompatActivity {
             if (exerciseName.equals("")){
                 nameEditT.setError("Field cannot be blank");
             }else{
-                DataBaseHelper db = new DataBaseHelper(this);
-                db.saveNewExercise(exerciseName);
+                dbHelper.saveNewExercise(exerciseName);
 
                 Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
                 createExercise.putExtra("name", exerciseName);
