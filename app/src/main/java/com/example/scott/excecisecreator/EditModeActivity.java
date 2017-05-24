@@ -18,6 +18,7 @@ public class EditModeActivity extends AppCompatActivity {
     private String exerciseName;
     private RecyclerView recyclerview;
     private ArrayList<String> entries = new ArrayList<>();
+    private DataBaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,9 @@ public class EditModeActivity extends AppCompatActivity {
         entries.add(1, "GoodBye");
         entries.add(2, "JK LOL");
 
-
+        //initialization
         recyclerview = (RecyclerView) findViewById(R.id.editExerciseRecycleView);
+        dbHelper = new DataBaseHelper(this);
 
         //Get exercise name to be edited
         Bundle extras = getIntent().getExtras();
