@@ -71,19 +71,19 @@ public class StartMenuActivity extends AppCompatActivity {
     /*Returns an ArrayLists of the names of
     saved exercises
      */
-    private ArrayList<String> loadNames(){
+    private ArrayList<String> loadNames() {
         ArrayList<String> names = new ArrayList<String>();
         Cursor cursor = dbHelper.getExerciseNames();
 
         int count = cursor.getCount();
         Log.d("debug", String.valueOf(count));
 
-        if (cursor.moveToFirst()){
-            while (cursor.moveToNext()){
+        if (cursor.moveToFirst()) {
+            while (cursor.moveToNext()) {
                 String temp = cursor.getString(0);
                 names.add(temp);
             }
-        }else{
+        } else {
             Toast.makeText(this, "Error loading exercise selection", Toast.LENGTH_SHORT).show();
         }
 
@@ -95,7 +95,7 @@ public class StartMenuActivity extends AppCompatActivity {
     /*Loads the listview of saved exercises located in
     the load CardView
      */
-    private void loadListView(){
+    private void loadListView() {
         ArrayList<String> names = loadNames();
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
         exercisesListView.setAdapter(adapter);
@@ -104,11 +104,11 @@ public class StartMenuActivity extends AppCompatActivity {
     /*Start morph animation for loading
     an exercise
      */
-    private void loadCardAnim(){
+    private void loadCardAnim() {
         TransitionManager.beginDelayedTransition(menuLayout);
 
         applyConstraintSet.centerVertically(R.id.loadExerciseCard, R.id.StartMenuLayout);
-        applyConstraintSet.setMargin(R.id.loadExerciseCard,ConstraintSet.TOP,0);
+        applyConstraintSet.setMargin(R.id.loadExerciseCard, ConstraintSet.TOP, 0);
 
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
@@ -122,10 +122,10 @@ public class StartMenuActivity extends AppCompatActivity {
     /*Resets the position of the
     load card from it's animated position
      */
-    private void resetLoadCard(){
+    private void resetLoadCard() {
         TransitionManager.beginDelayedTransition(menuLayout);
 
-        for (int i = 0; i < loadContainer.getChildCount(); i++){
+        for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.GONE);
         }
         loadButton.setVisibility(View.VISIBLE);
@@ -137,13 +137,13 @@ public class StartMenuActivity extends AppCompatActivity {
     /*Start morph animation for creating
     a new exercise
      */
-    private void createCardAnim(){
+    private void createCardAnim() {
         TransitionManager.beginDelayedTransition(menuLayout);
 
         applyConstraintSet.centerVertically(R.id.createExerciseCard, R.id.StartMenuLayout);
-        applyConstraintSet.setMargin(R.id.createExerciseCard, ConstraintSet.BOTTOM,0);
+        applyConstraintSet.setMargin(R.id.createExerciseCard, ConstraintSet.BOTTOM, 0);
 
-        for (int i = 0; i < createContainer.getChildCount(); i++){
+        for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
@@ -153,10 +153,10 @@ public class StartMenuActivity extends AppCompatActivity {
     /*Rsets the position of the
     create card from it's animated position
      */
-    private void resetCreateCard(){
+    private void resetCreateCard() {
         TransitionManager.beginDelayedTransition(menuLayout);
 
-        for (int i = 0; i < createContainer.getChildCount(); i++){
+        for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.GONE);
         }
         createButton.setVisibility(View.VISIBLE);
@@ -166,31 +166,44 @@ public class StartMenuActivity extends AppCompatActivity {
     }
 
     public void loadButtonClicked(View view) {
-        if(loadIsCard){
+        if (loadIsCard) {
 
-        }else{
+        } else {
             loadCardAnim();
             loadIsCard = true;
         }
     }
 
     /*Handle the creation of a new sql table for the
-    exercise, passes name to editMode Activity
+    exercise, passes name to editMode Activity. Checks
+    if the new name currently exists or not
      */
     public void createButtonClicked(View view) {
-        if (createIsCard){
-            String exerciseName = nameEditT.getText().toString();
-            if (exerciseName.equals("")){
+        if (createIsCard) {
+            String newName = nameEditT.getText().toString();
+            if (newName.equals("")) {
                 nameEditT.setError("Field cannot be blank");
-            }else{
-                dbHelper.saveNewExercise(exerciseName);
+            } else {
+                boolean doesExist = false;
+                ArrayList<String> currentNames = loadNames();
+                for (String current : currentNames) {
+                    if (newName.equals(current)) {
+                        doesExist = true;
+                    }
+                }
 
-                Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
-                createExercise.putExtra("name", exerciseName);
-                startActivity(createExercise);
+                if (!doesExist) {
+                    dbHelper.saveNewExercise(newName);
+
+                    Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                    createExercise.putExtra("name", newName);
+                    startActivity(createExercise);
+                } else {
+                    nameEditT.setError("That name already exists");
+                }
             }
 
-        }else{
+        } else {
             createCardAnim();
             createIsCard = true;
         }
