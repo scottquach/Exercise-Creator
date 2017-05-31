@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +19,12 @@ public class EditModeActivity extends AppCompatActivity {
 
     private String exerciseName;
     private RecyclerView recyclerview;
+
     private ArrayList<String> entries = new ArrayList<>();
+
+    //0 represents a task, and 1 represents a break
+    private ArrayList<Integer> entryType = new ArrayList<Integer>();
+
     private DataBaseHelper dbHelper;
 
     @Override
@@ -57,15 +63,25 @@ public class EditModeActivity extends AppCompatActivity {
         recyclerview.setAdapter(adapter);
     }
 
+    /*Retrives the specified exercises data from the db and
+    indexes them into arrayLists, with the entryType list discerning
+    between tasks and breaks
+     */
     private void loadData(){
         Cursor tasks = dbHelper.getExerciseTask(exerciseName);
         Cursor breaks = dbHelper.getExerciseBreak(exerciseName);
-        while(tasks.moveToFirst()){
 
 
+        if (tasks.moveToFirst()){
+
+        }else{
+            Log.d("debug", "error loading tasks cursor");
         }
-        while(tasks.moveToFirst()){
 
+        if (breaks.moveToFirst()){
+
+        }else{
+            Log.d("debug", "error loading break cursor");
         }
 
         //// TODO: 5/30/2017 populate an arraylist based of the nulls of tasks and breaks
