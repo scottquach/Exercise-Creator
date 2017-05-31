@@ -2,6 +2,7 @@ package com.example.scott.excecisecreator;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -57,7 +58,10 @@ public class EditModeActivity extends AppCompatActivity {
     }
 
     private void loadData(){
+        Cursor tasks = dbHelper.getExerciseTask(exerciseName);
+        Cursor breaks = dbHelper.getExerciseBreak(exerciseName);
 
+        //// TODO: 5/30/2017 populate an arraylist based of the nulls of tasks and breaks
     }
 
 

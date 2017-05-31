@@ -57,9 +57,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getExerciseContent(){
+    public Cursor getExerciseTask(String tableName){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor;
+        Cursor cursor = db.rawQuery("SELECT task FROM " + tableName, null);
+        return cursor;
+    }
+
+    public Cursor getExerciseBreak(String tableName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT break FROM " + tableName, null);
         return cursor;
     }
 }
