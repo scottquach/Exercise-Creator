@@ -60,8 +60,16 @@ public class EditModeActivity extends AppCompatActivity {
     private void loadData(){
         Cursor tasks = dbHelper.getExerciseTask(exerciseName);
         Cursor breaks = dbHelper.getExerciseBreak(exerciseName);
+        while(tasks.moveToFirst()){
+
+
+        }
+        while(tasks.moveToFirst()){
+
+        }
 
         //// TODO: 5/30/2017 populate an arraylist based of the nulls of tasks and breaks
+        ArrayList<String> contentOrder = new ArrayList<String>();
     }
 
 
@@ -76,7 +84,7 @@ public class EditModeActivity extends AppCompatActivity {
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                String task = input.getText().toString();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
