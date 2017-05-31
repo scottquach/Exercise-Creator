@@ -50,7 +50,7 @@
             app:fabSize="mini"
             app:menu_colorNormal="@color/colorPrimary"
             android:src="@drawable/ic_add"
-            android:onClick="createPauseClicked"/>
+            android:onClick="createBreakClicked"/>
 
 
     </com.github.clans.fab.FloatingActionMenu>

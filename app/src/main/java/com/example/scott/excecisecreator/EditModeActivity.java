@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class EditModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mode);
 
+        //dummy entries
         entries.add(0,"Hello");
         entries.add(1, "GoodBye");
         entries.add(2, "JK LOL");
@@ -50,6 +52,7 @@ public class EditModeActivity extends AppCompatActivity {
             startActivity(exitToHome);
         }
 
+        //changes action bar name based on exerciseName
         getSupportActionBar().setTitle(exerciseName);
 
         setUpRecycleView();
@@ -115,10 +118,26 @@ public class EditModeActivity extends AppCompatActivity {
 
     }
 
-    private void createPause(){
+    private void createBreak(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Create Pause");
+        builder.setTitle("Create Break");
 
+        builder.setView(R.layout.dialog_new_break);
+
+        final NumberPicker minuteNP = (NumberPicker) findViewById(R.id.minutePicker);
+        final NumberPicker secondNP = (NumberPicker) findViewById(R.id.secondPIcker);
+        minuteNP.setMinValue(0);
+        minuteNP.setMaxValue(60);
+        secondNP.setMinValue(1);
+        minuteNP.setMaxValue(59);
+
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int minutes = minuteNP.getValue();
+                int seconds= secondNP.getValue();
+            }
+        });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -128,8 +147,8 @@ public class EditModeActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void createPauseClicked(View view) {
-        createPause();
+    public void createBreakClicked(View view) {
+        createBreak();
     }
 
     public void createTaskClicked(View view) {
