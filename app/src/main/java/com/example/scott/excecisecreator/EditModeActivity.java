@@ -19,7 +19,9 @@ import java.util.ArrayList;
 public class EditModeActivity extends AppCompatActivity {
 
     private String exerciseName;
+
     private RecyclerView recyclerview;
+    private RecyclerAdapter adapter;
 
     private ArrayList<String> entries = new ArrayList<>();
 
@@ -62,8 +64,12 @@ public class EditModeActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerview.setLayoutManager(layoutManager);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(entries, this);
+        adapter = new RecyclerAdapter(entries, this);
         recyclerview.setAdapter(adapter);
+    }
+
+    private void updateRecycleView(){
+        adapter.notifyDataSetChanged();
     }
 
     /*Retrives the specified exercises data from the db and
@@ -104,6 +110,10 @@ public class EditModeActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String task = input.getText().toString();
+                Toast.makeText(EditModeActivity.this, task, Toast.LENGTH_SHORT).show();
+                entries.add(task);
+                entryType.add(0);
+                updateRecycleView();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -125,11 +135,11 @@ public class EditModeActivity extends AppCompatActivity {
         builder.setView(R.layout.dialog_new_break);
 
         final NumberPicker minuteNP = (NumberPicker) findViewById(R.id.minutePicker);
-        final NumberPicker secondNP = (NumberPicker) findViewById(R.id.secondPIcker);
-        minuteNP.setMinValue(0);
-        minuteNP.setMaxValue(60);
-        secondNP.setMinValue(1);
-        minuteNP.setMaxValue(59);
+        final NumberPicker secondNP = (NumberPicker) findViewById(R.id.secondPicker);
+//        minuteNP.setMinValue(0);
+//        minuteNP.setMaxValue(60);
+//        secondNP.setMinValue(1);
+//        minuteNP.setMaxValue(59);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override

@@ -14,7 +14,7 @@
         android:text="Minutes"/>
 
     <NumberPicker
-        android:id="@+id/secondPIcker"
+        android:id="@+id/secondPicker"
         android:layout_width="50dp"
         android:layout_height="match_parent"></NumberPicker>
 
