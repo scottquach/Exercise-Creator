@@ -147,6 +147,8 @@ public class StartMenuActivity extends AppCompatActivity {
         applyConstraintSet.clone(originalConstraint);
     }
 
+    //// TODO: 6/11/2017 still error that allows both creation and load cards to be open at the same
+
     /*Start morph animation for creating
     a new exercise
      */
