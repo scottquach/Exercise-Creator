@@ -97,14 +97,19 @@ public class StartMenuActivity extends AppCompatActivity {
     the load CardView
      */
     private void loadListView() {
-        ArrayList<String> names = loadNames();
+        final ArrayList<String> names = loadNames();
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
         exercisesListView.setAdapter(adapter);
 
         exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String exerciseName = names.get(position);
 
+                //// TODO: 6/11/2017 switch from EditModeActivity to ExerciseActivity
+                Intent openEditMode = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                openEditMode.putExtra("name", exerciseName);
+                startActivity(openEditMode);
             }
         });
     }
