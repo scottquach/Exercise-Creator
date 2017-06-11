@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,6 +100,13 @@ public class StartMenuActivity extends AppCompatActivity {
         ArrayList<String> names = loadNames();
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
         exercisesListView.setAdapter(adapter);
+
+        exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
 
     /*Start morph animation for loading
