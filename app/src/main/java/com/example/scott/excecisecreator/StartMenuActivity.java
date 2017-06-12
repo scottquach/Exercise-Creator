@@ -182,6 +182,9 @@ public class StartMenuActivity extends AppCompatActivity {
         if (loadIsCard) {
 
         } else {
+            if (createIsCard){
+                resetCreateCard();
+            }
             loadCardAnim();
             loadIsCard = true;
         }
@@ -217,6 +220,9 @@ public class StartMenuActivity extends AppCompatActivity {
             }
 
         } else {
+            if (loadIsCard){
+                resetLoadCard();
+            }
             createCardAnim();
             createIsCard = true;
         }
