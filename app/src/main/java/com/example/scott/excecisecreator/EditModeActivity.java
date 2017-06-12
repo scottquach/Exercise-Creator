@@ -78,24 +78,23 @@ public class EditModeActivity extends AppCompatActivity {
     between tasks and breaks
      */
     private void loadData(){
-        Cursor tasks = dbHelper.getExerciseTask(exerciseName);
-        Cursor breaks = dbHelper.getExerciseBreak(exerciseName);
+        Cursor dataCursor = dbHelper.getExercise(exerciseName);
 
+        if (dataCursor.moveToFirst()){
 
-        if (tasks.moveToFirst()){
+            String entry = "";
+            int type = 0;
+
+            do{
+                entry = dataCursor.getString(1);
+                type = dataCursor.getInt(2);
+                entries.add(entry);
+                entryType.add(type);
+            }while (dataCursor.moveToNext());
 
         }else{
-            Log.d("debug", "error loading tasks cursor");
+            Log.d("debug", "error loading cursor data");
         }
-
-        if (breaks.moveToFirst()){
-
-        }else{
-            Log.d("debug", "error loading break cursor");
-        }
-
-        //// TODO: 5/30/2017 populate an arraylist based of the nulls of tasks and breaks
-        ArrayList<String> contentOrder = new ArrayList<String>();
     }
 
     /*Saves the edited data back into
@@ -131,8 +130,6 @@ public class EditModeActivity extends AppCompatActivity {
             }
         });
         builder.show();
-
-
 
     }
 
@@ -178,7 +175,6 @@ public class EditModeActivity extends AppCompatActivity {
         }else{
             return seconds;
         }
-
     }
 
     public void createBreakClicked(View view) {

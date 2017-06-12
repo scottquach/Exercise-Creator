@@ -47,7 +47,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         db.execSQL("CREATE TABLE " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "task TEXT, break INTEGER)");
+                "entries TEXT, type INTEGER)");
 
     }
 
@@ -65,15 +65,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getExerciseTask(String tableName){
+    /*return a cursor containing the entries saved by the
+    passed in exercise name tableName
+     */
+    public Cursor getExerciseEntries(String tableName){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT task FROM " + tableName, null);
+        Cursor cursor = db.rawQuery("SELECT entries FROM " + tableName, null);
         return cursor;
     }
 
-    public Cursor getExerciseBreak(String tableName){
+    /*return a cursor containing the entry types saved by the
+    passed in exercise name tableName. Integer 0 represents task
+    and integer 1 represents break
+     */
+    public Cursor getExerciseType(String tableName){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT break FROM " + tableName, null);
+        Cursor cursor = db.rawQuery("SELECT type FROM " + tableName, null);
+        return cursor;
+    }
+
+    /*returns a cursor containing the entire table
+    of the passed in exercise name tableName.
+     */
+    public Cursor getExercise(String tableName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
         return cursor;
     }
 }
