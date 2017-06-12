@@ -26,6 +26,8 @@ public class ExceriseActivity extends AppCompatActivity {
     private String exerciseName;
 
     private ArrayList<String> entries = new ArrayList<String>();
+    //0 represents a task, 1 represents a break
+    private ArrayList<Integer> types = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,9 @@ public class ExceriseActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    /*fill the ArrayLists entries and types with the appropriate
+    values from the db table named exerciseName
+     */
     private void loadData(){
         Cursor dataCursor = db.getExercise(exerciseName);
 
@@ -77,9 +82,13 @@ public class ExceriseActivity extends AppCompatActivity {
                 String entry = dataCursor.getString(1);
                 int type = dataCursor.getInt(2);
 
-
+                entries.add(entry);
+                types.add(type);
             }while (dataCursor.moveToNext());
         }
     }
 
+    public void playButtonClicked(View view) {
+
+    }
 }
