@@ -48,6 +48,7 @@ public class EditModeActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             exerciseName = extras.getString("name");
+            loadData();
         }else{
             Toast.makeText(this, "Error creating new exercise", Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(EditModeActivity.this, StartMenuActivity.class);
@@ -72,7 +73,7 @@ public class EditModeActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    /*Retrives the specified exercises data from the db and
+    /*Retrieves the specified exercises data from the db and
     indexes them into arrayLists, with the entryType list discerning
     between tasks and breaks
      */
@@ -97,6 +98,13 @@ public class EditModeActivity extends AppCompatActivity {
         ArrayList<String> contentOrder = new ArrayList<String>();
     }
 
+    /*Saves the edited data back into
+    the db
+     */
+    private void saveData(){
+
+
+    }
 
     private void createTask(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -138,16 +146,17 @@ public class EditModeActivity extends AppCompatActivity {
 
         final NumberPicker minuteNP = (NumberPicker) findViewById(R.id.minutePicker);
         final NumberPicker secondNP = (NumberPicker) findViewById(R.id.secondPicker);
-//        minuteNP.setMinValue(0);
-//        minuteNP.setMaxValue(60);
-//        secondNP.setMinValue(1);
-//        minuteNP.setMaxValue(59);
+        minuteNP.setMinValue(0);
+        minuteNP.setMaxValue(60);
+        secondNP.setMinValue(1);
+        minuteNP.setMaxValue(59);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int minutes = minuteNP.getValue();
-                int seconds= secondNP.getValue();
+                int seconds = secondNP.getValue();
+                int totalSeconds = convertToSeconds(minutes, seconds);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -157,6 +166,19 @@ public class EditModeActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private int convertToSeconds(int minute, int seconds){
+        int totalSeconds = 0;
+        if (minute != 0){
+            int minuteToSeconds = minute / 60;
+            totalSeconds = minuteToSeconds;
+            totalSeconds += seconds;
+            return totalSeconds;
+        }else{
+            return seconds;
+        }
+
     }
 
     public void createBreakClicked(View view) {

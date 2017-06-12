@@ -39,11 +39,9 @@ public class StartMenuActivity extends AppCompatActivity {
     private LinearLayout loadContainer;
     private LinearLayout createContainer;
 
-    private boolean loadIsCard = false;
-    private boolean createIsCard = false;
+    private boolean loadIsCard, createIsCard = false;
 
-    private Button createButton;
-    private Button loadButton;
+    private Button createButton, loadButton;
 
     private EditText nameEditT;
 
