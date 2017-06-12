@@ -58,6 +58,7 @@ public class EditModeActivity extends AppCompatActivity {
         //changes action bar name based on exerciseName
         getSupportActionBar().setTitle(exerciseName);
 
+        loadData();
         setUpRecycleView();
     }
 
