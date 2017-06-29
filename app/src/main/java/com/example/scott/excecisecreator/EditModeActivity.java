@@ -8,13 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class EditModeActivity extends AppCompatActivity {
 
@@ -140,10 +143,13 @@ public class EditModeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Break");
 
-        builder.setView(R.layout.dialog_new_break);
+        LayoutInflater inflater = (LayoutInflater) this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_new_break, null);
 
-        final NumberPicker minuteNP = (NumberPicker) findViewById(R.id.minutePicker);
-        final NumberPicker secondNP = (NumberPicker) findViewById(R.id.secondPicker);
+        builder.setView(view);
+
+        final NumberPicker minuteNP = (NumberPicker) view.findViewById(R.id.minutePicker);
+        final NumberPicker secondNP = (NumberPicker) view.findViewById(R.id.secondPicker);
         minuteNP.setMinValue(0);
         minuteNP.setMaxValue(60);
         secondNP.setMinValue(1);
@@ -155,6 +161,9 @@ public class EditModeActivity extends AppCompatActivity {
                 int minutes = minuteNP.getValue();
                 int seconds = secondNP.getValue();
                 int totalSeconds = convertToSeconds(minutes, seconds);
+                entries.add(String.valueOf(totalSeconds));
+                entryType.add(1);
+                updateRecycleView();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
