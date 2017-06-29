@@ -176,10 +176,9 @@ public class EditModeActivity extends AppCompatActivity {
     }
 
     private int convertToSeconds(int minute, int seconds){
-        int totalSeconds = 0;
+        int totalSeconds;
         if (minute != 0){
-            int minuteToSeconds = minute / 60;
-            totalSeconds = minuteToSeconds;
+            totalSeconds = (minute / 60);
             totalSeconds += seconds;
             return totalSeconds;
         }else{

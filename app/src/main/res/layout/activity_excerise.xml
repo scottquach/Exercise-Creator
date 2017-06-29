@@ -25,7 +25,6 @@
     <com.github.clans.fab.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fab_size="normal"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
@@ -35,6 +34,9 @@
         android:id="@+id/floatingActionButton"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        app:fab_size="normal"
+        app:fab_progress_max="100"
+        app:fab_progress="0"
         android:onClick="playButtonClicked"/>
 
 

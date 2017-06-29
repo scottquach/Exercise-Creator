@@ -51,8 +51,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void saveExerciseEdits() {
-
+    //ToDo complete this stuff
+    public void saveExerciseEdits(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        //clear table
+        db.execSQL("delete from " + name);
     }
 
     public Cursor getExerciseNames() {

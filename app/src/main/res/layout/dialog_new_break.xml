@@ -3,23 +3,35 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <NumberPicker
-        android:id="@+id/minutePicker"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"></NumberPicker>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Minutes"/>
+        android:layout_gravity="center_vertical"
+        android:layout_weight=".5"
+        android:text="@string/minutes"/>
 
     <NumberPicker
-        android:id="@+id/secondPicker"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"></NumberPicker>
+        android:id="@+id/minutePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"></NumberPicker>
+
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight=".5"
+        android:text="@string/seconds"/>
+    <NumberPicker
+        android:id="@+id/secondPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"></NumberPicker>
+
+
 
 </LinearLayout>
