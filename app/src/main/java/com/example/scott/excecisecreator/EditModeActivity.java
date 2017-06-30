@@ -38,11 +38,6 @@ public class EditModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mode);
 
-        //dummy entries
-        entries.add(0,"Hello");
-        entries.add(1, "GoodBye");
-        entries.add(2, "JK LOL");
-
         //initialization
         recyclerview = (RecyclerView) findViewById(R.id.editExerciseRecycleView);
         dbHelper = new DataBaseHelper(this);
@@ -63,6 +58,12 @@ public class EditModeActivity extends AppCompatActivity {
 
         loadData();
         setUpRecycleView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveData();
     }
 
     private void setUpRecycleView(){
@@ -105,8 +106,7 @@ public class EditModeActivity extends AppCompatActivity {
     the db
      */
     private void saveData(){
-
-
+        dbHelper.saveExerciseEdits(exerciseName, entries, entryType);
     }
 
     private void createTask(){
@@ -152,8 +152,8 @@ public class EditModeActivity extends AppCompatActivity {
         final NumberPicker secondNP = (NumberPicker) view.findViewById(R.id.secondPicker);
         minuteNP.setMinValue(0);
         minuteNP.setMaxValue(60);
-        secondNP.setMinValue(1);
-        minuteNP.setMaxValue(59);
+        secondNP.setMinValue(0);
+        secondNP.setMaxValue(59);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
@@ -161,6 +161,7 @@ public class EditModeActivity extends AppCompatActivity {
                 int minutes = minuteNP.getValue();
                 int seconds = secondNP.getValue();
                 int totalSeconds = convertToSeconds(minutes, seconds);
+                Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds: " + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
                 entries.add(String.valueOf(totalSeconds));
                 entryType.add(1);
                 updateRecycleView();
@@ -177,12 +178,12 @@ public class EditModeActivity extends AppCompatActivity {
 
     private int convertToSeconds(int minute, int seconds){
         int totalSeconds;
-        if (minute != 0){
-            totalSeconds = (minute / 60);
+        if (minute == 0){
+            return seconds;
+        }else{
+            totalSeconds = (minute * 60);
             totalSeconds += seconds;
             return totalSeconds;
-        }else{
-            return seconds;
         }
     }
 

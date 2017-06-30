@@ -6,7 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.ContactsContract;
+import android.webkit.WebHistoryItem;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by scott on 5/18/2017.
@@ -52,10 +55,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     //ToDo complete this stuff
-    public void saveExerciseEdits(String name) {
+    public void saveExerciseEdits(String tableName, ArrayList<String> entries, ArrayList<Integer> types) {
         SQLiteDatabase db = this.getWritableDatabase();
         //clear table
-        db.execSQL("delete from " + name);
+        db.execSQL("delete from " + tableName);
+
+        ContentValues values = new ContentValues();
+
+        for (int i = 0; i < entries.size(); i++){
+            values.put("entries", entries.get(i));
+            values.put("type", types.get(i));
+            if(db.insert(tableName, null, values) == -1){
+                Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public Cursor getExerciseNames() {
