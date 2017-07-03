@@ -14,7 +14,7 @@
     <string name="exercise_name">Exercise Name</string>
     <string name="new_task">New Task</string>
     <string name="task_name">Task Name</string>
-    <string name="edit_mode">Edit Mode</string>
+    <string name="edit_mode"> Edit Mode</string>
     <string name="create_break">Create Break</string>
     <string name="add">Add</string>
 </resources>

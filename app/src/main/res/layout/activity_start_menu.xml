@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="6dp"
         app:cardElevation="4dp"
-        android:padding="0dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
@@ -26,9 +25,8 @@
             android:id="@+id/loadExerciseContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
+            android:gravity="center_horizontal"
             app:layout_constraintHorizontal_bias="0.497"
-            android:layout_marginBottom="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="85dp">
@@ -36,7 +34,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:text="@string/load_exercise"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 android:visibility="gone"/>
 
             <ListView
@@ -45,23 +46,35 @@
                 android:visibility="gone"
                 android:id="@+id/exercisesListView"/>
 
-            <Button
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/loadExerciseInnerContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:visibility="gone"
-                android:onClick="loadCancelButtonClicked"/>
+                android:gravity="center_vertical">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:visibility="gone"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="loadCancelButtonClicked"/>
+
+                <Button
+                    android:id="@+id/loadButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="loadButtonClicked"
+                    android:text="@string/load" />
+
+            </LinearLayout>
 
 
-            <Button
-                android:id="@+id/loadButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/load"
-                android:onClick="loadButtonClicked"
-                />
 
         </LinearLayout>
+
+
 
     </android.support.v7.widget.CardView>
 
@@ -71,7 +84,6 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="6dp"
         app:cardElevation="4dp"
-        android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
@@ -83,7 +95,7 @@
             android:id="@+id/createExerciseContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="85dp">
@@ -91,32 +103,48 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:text="@string/create_new_exercise"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 android:visibility="gone"/>
 
             <EditText
                 android:id="@+id/setNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:hint="@string/exercise_name"
                 android:visibility="gone"/>
 
-            <Button
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/createExerciseInnerContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:onClick="createCancelButtonClicked"
-                android:visibility="gone"/>
+                android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/createButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create"
-                android:onClick="createButtonClicked"
-                />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="createCancelButtonClicked"
+                    android:visibility="gone"/>
+                <Button
+                    android:id="@+id/createButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:onClick="createButtonClicked"
+                    android:text="@string/create" />
+
+            </LinearLayout>
+
+
 
         </LinearLayout>
+
+
 
     </android.support.v7.widget.CardView>
 

@@ -39,6 +39,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void saveNewExercise(String name) {
+        name = "'" + name + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("exerciseName", name);
@@ -56,7 +57,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void saveExerciseEdits(String tableName, ArrayList<String> entries, ArrayList<Integer> types) {
         SQLiteDatabase db = this.getWritableDatabase();
         //clear table
-        db.execSQL("delete from " + tableName);
+        db.delete(tableName, null, null);
 
         ContentValues values = new ContentValues();
 
@@ -69,6 +70,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /*Return a cursor containing all of the names
+    of exercise tables
+     */
     public Cursor getExerciseNames() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT exerciseName FROM " + DATABASE_MASTER, null);
@@ -102,4 +106,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
         return cursor;
     }
+
+    /*Deletes the table matching with in name with the
+    passed in string tableName
+     */
+    public void deleteExercise(String tableName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + tableName);
+        db.delete(DATABASE_MASTER, tableName, null);
+        Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+    }
+
 }

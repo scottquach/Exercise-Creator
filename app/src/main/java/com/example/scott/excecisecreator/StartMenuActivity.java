@@ -38,7 +38,9 @@ public class StartMenuActivity extends AppCompatActivity {
 
     @BindView(R.id.StartMenuLayout) ConstraintLayout menuLayout;
     @BindView(R.id.loadExerciseContainer) LinearLayout loadContainer;
+    @BindView(R.id.loadExerciseInnerContainer) LinearLayout loadInnerContainer;
     @BindView(R.id.createExerciseContainer) LinearLayout createContainer;
+    @BindView(R.id.createExerciseInnerContainer) LinearLayout createInnerContainer;
 
 
     @BindView(R.id.setNameEditText) TextView nameEditT;
@@ -56,7 +58,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
         //initialize
         ButterKnife.bind(this);
-        
+
         applyConstraintSet.clone(menuLayout);
         originalConstraint.clone(menuLayout);
         dbHelper = new DataBaseHelper(this);
@@ -77,10 +79,9 @@ public class StartMenuActivity extends AppCompatActivity {
                 String temp = cursor.getString(0);
                 names.add(temp);
             }
-        } else {
-            Toast.makeText(this, "Error loading exercise selection", Toast.LENGTH_SHORT).show();
+        }else{
+            Log.d("debug", "no saved exercises");
         }
-
 
         cursor.close();
         return names;
@@ -100,16 +101,14 @@ public class StartMenuActivity extends AppCompatActivity {
             exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    recyclerLoaded = false;
                     String exerciseName = names.get(position);
-
-                    //// TODO: 6/11/2017 switch from EditModeActivity to ExerciseActivity
-                    Intent openEditMode = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                    Intent openEditMode = new Intent(StartMenuActivity.this, ExerciseActivity.class);
                     openEditMode.putExtra("name", exerciseName);
                     startActivity(openEditMode);
                 }
             });
         }
-
     }
 
     /*Start morph animation for loading
@@ -123,6 +122,9 @@ public class StartMenuActivity extends AppCompatActivity {
 
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
+        }
+        for (int i = 0; i < loadInnerContainer.getChildCount(); i++){
+            loadInnerContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
         loadButton.setVisibility(View.GONE);
 
@@ -139,6 +141,11 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.GONE);
         }
+
+        for (int i = 0; i < loadInnerContainer.getChildCount(); i++){
+            loadInnerContainer.getChildAt(i).setVisibility(View.GONE);
+        }
+        loadInnerContainer.setVisibility(View.VISIBLE);
         loadButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);
@@ -157,6 +164,9 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
+        for (int i = 0; i < createInnerContainer.getChildCount(); i++){
+            createInnerContainer.getChildAt(i).setVisibility(View.VISIBLE);
+        }
 
         applyConstraintSet.applyTo(menuLayout);
     }
@@ -170,6 +180,10 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.GONE);
         }
+        for (int i = 0; i < createInnerContainer.getChildCount(); i++){
+            createInnerContainer.getChildAt(i).setVisibility(View.GONE);
+        }
+        createInnerContainer.setVisibility(View.VISIBLE);
         createButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);
@@ -209,7 +223,7 @@ public class StartMenuActivity extends AppCompatActivity {
                     dbHelper.saveNewExercise(newName);
 
                     Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
-                    createExercise.putExtra("name", newName);
+                    createExercise.putExtra("name", "'" + newName + "'");
                     startActivity(createExercise);
                 } else {
                     nameEditT.setError(getString(R.string.name_already_exists));

@@ -61,7 +61,7 @@ public class EditModeActivity extends AppCompatActivity {
         }
 
         //changes action bar name based on exerciseName
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + getString(R.string.edit_mode));
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
 
         loadData();
         setUpRecycleView();
@@ -127,11 +127,7 @@ public class EditModeActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String task = input.getText().toString();
-                Toast.makeText(EditModeActivity.this, task, Toast.LENGTH_SHORT).show();
-                entries.add(task);
-                entryType.add(0);
-                updateRecycleView();
+
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -140,7 +136,27 @@ public class EditModeActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        builder.show();
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String task = input.getText().toString();
+                if(task.isEmpty()){
+                    input.setError("must not be empty");
+                }else{
+                    entries.add(task);
+                    entryType.add(0);
+                    updateRecycleView();
+                    dialog.dismiss();
+                }
+
+            }
+        });
 
     }
 
@@ -198,5 +214,17 @@ public class EditModeActivity extends AppCompatActivity {
 
     public void createTaskClicked(View view) {
         createTask();
+    }
+
+    public void startExerciseButtonClicked(View view) {
+        saveData();
+        Intent startExercise = new Intent(EditModeActivity.this, ExerciseActivity.class);
+        startExercise.putExtra("name", exerciseName);
+        startActivity(startExercise);
+        finish();
+    }
+
+    public void deleteButtonClicked(View view) {
+        dbHelper.deleteExercise(exerciseName);
     }
 }

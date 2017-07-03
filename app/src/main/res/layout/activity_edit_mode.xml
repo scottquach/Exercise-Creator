@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.scott.excecisecreator.EditModeActivity">
+    tools:context="com.example.scott.excecisecreator.EditModeActivity"
+    android:background="@color/backgroundColor">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/editExerciseRecycleView"
@@ -22,33 +23,51 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.03" />
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:fab_icon="@drawable/ic_play_arrow"
+        android:onClick="startExerciseButtonClicked"
+        />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        app:fab_labelStyle="@id/fab_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <com.getbase.floatingactionbutton.AddFloatingActionButton
+            android:id="@+id/addTaskButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="0dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:fab_labelStyle="@id/fab_label">
+            android:onClick="createTaskClicked"
+            app:fab_size="mini"
+            app:fab_title="Create Task" />
 
-            <com.getbase.floatingactionbutton.AddFloatingActionButton
-                android:id="@+id/addTaskButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_size="mini"
-                app:fab_title="Create Task"
-                android:onClick="createTaskClicked"/>
+        <com.getbase.floatingactionbutton.AddFloatingActionButton
+            android:id="@+id/addBreakButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="createBreakClicked"
+            app:fab_size="mini"
+            app:fab_title="Add Break" />
 
-            <com.getbase.floatingactionbutton.AddFloatingActionButton
-                android:id="@+id/addBreakButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_size="mini"
-                app:fab_title="Add Break"
-                android:onClick="createBreakClicked"/>
+        <com.getbase.floatingactionbutton.AddFloatingActionButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="deleteButtonClicked"
+            app:fab_size="mini"
+            app:fab_title="Delete"
+            app:fab_icon="@drawable/ic_delete"/>
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 
 </android.support.constraint.ConstraintLayout>
