@@ -22,7 +22,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp" />
 
-    <com.github.clans.fab.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
@@ -35,8 +35,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:fab_size="normal"
-        app:fab_progress_max="100"
-        app:fab_progress="0"
+        app:fab_title="play"
         android:onClick="playButtonClicked"/>
 
 

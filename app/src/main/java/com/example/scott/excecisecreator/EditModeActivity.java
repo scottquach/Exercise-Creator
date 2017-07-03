@@ -16,14 +16,21 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 import java.util.ArrayList;
 import java.util.zip.Inflater;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EditModeActivity extends AppCompatActivity {
 
     private String exerciseName;
 
-    private RecyclerView recyclerview;
+    @BindView(R.id.editExerciseRecycleView) RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
     private ArrayList<String> entries = new ArrayList<>();
@@ -33,13 +40,17 @@ public class EditModeActivity extends AppCompatActivity {
 
     private DataBaseHelper dbHelper;
 
+    @BindView(R.id.addTaskButton) FloatingActionButton addTaskButton;
+    @BindView(R.id.addBreakButton) FloatingActionButton addBreakButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mode);
 
+        ButterKnife.bind(this);
+
         //initialization
-        recyclerview = (RecyclerView) findViewById(R.id.editExerciseRecycleView);
         dbHelper = new DataBaseHelper(this);
 
         //Get exercise name to be edited
@@ -54,7 +65,7 @@ public class EditModeActivity extends AppCompatActivity {
         }
 
         //changes action bar name based on exerciseName
-        getSupportActionBar().setTitle(exerciseName);
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName);
 
         loadData();
         setUpRecycleView();
@@ -68,10 +79,10 @@ public class EditModeActivity extends AppCompatActivity {
 
     private void setUpRecycleView(){
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerview.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         adapter = new RecyclerAdapter(entries, this);
-        recyclerview.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
     }
 
     private void updateRecycleView(){
@@ -113,7 +124,7 @@ public class EditModeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New Task");
 
-        final EditText input = (EditText) new EditText(this);
+        final EditText input = new EditText(this);
         input.setHint("Task Name");
         builder.setView(input);
 
@@ -143,7 +154,7 @@ public class EditModeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Break");
 
-        LayoutInflater inflater = (LayoutInflater) this.getLayoutInflater();
+        LayoutInflater inflater = this.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_new_break, null);
 
         builder.setView(view);

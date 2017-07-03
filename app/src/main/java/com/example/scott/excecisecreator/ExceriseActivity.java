@@ -43,7 +43,7 @@ public class ExceriseActivity extends AppCompatActivity {
             startActivity(exitToHome);
         }
 
-        getSupportActionBar().setTitle(exerciseName);
+        getSupportActionBar().setTitle(exerciseName + " Edit Mode");
 
         loadData();
         setUpRecycleView();
