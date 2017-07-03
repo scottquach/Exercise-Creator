@@ -148,8 +148,6 @@ public class EditModeActivity extends AppCompatActivity {
 
     }
 
-    // TODO: 6/11/2017 trying to create a break freezes the phone
-
     private void createBreak(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Break");

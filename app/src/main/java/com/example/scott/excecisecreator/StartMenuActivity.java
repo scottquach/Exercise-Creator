@@ -34,7 +34,7 @@ public class StartMenuActivity extends AppCompatActivity {
     private LinearLayout loadContainer;
     private LinearLayout createContainer;
 
-    private boolean loadIsCard, createIsCard = false;
+    private boolean loadIsCard, createIsCard, recyclerLoaded = false;
 
     private Button createButton, loadButton;
 
@@ -90,21 +90,26 @@ public class StartMenuActivity extends AppCompatActivity {
     the load CardView
      */
     private void loadListView() {
-        final ArrayList<String> names = loadNames();
-        ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
-        exercisesListView.setAdapter(adapter);
+        if (!recyclerLoaded){
+            final ArrayList<String> names = loadNames();
+            ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
+            exercisesListView.setAdapter(adapter);
 
-        exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String exerciseName = names.get(position);
+            recyclerLoaded = true;
 
-                //// TODO: 6/11/2017 switch from EditModeActivity to ExerciseActivity
-                Intent openEditMode = new Intent(StartMenuActivity.this, EditModeActivity.class);
-                openEditMode.putExtra("name", exerciseName);
-                startActivity(openEditMode);
-            }
-        });
+            exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String exerciseName = names.get(position);
+
+                    //// TODO: 6/11/2017 switch from EditModeActivity to ExerciseActivity
+                    Intent openEditMode = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                    openEditMode.putExtra("name", exerciseName);
+                    startActivity(openEditMode);
+                }
+            });
+        }
+
     }
 
     /*Start morph animation for loading
@@ -119,6 +124,7 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
+        loadButton.setVisibility(View.GONE);
 
         applyConstraintSet.applyTo(menuLayout);
         loadListView();
@@ -177,7 +183,6 @@ public class StartMenuActivity extends AppCompatActivity {
                 resetCreateCard();
             }
             loadCardAnim();
-            loadButton.setVisibility(View.GONE);
             loadIsCard = true;
         }
     }
@@ -213,6 +218,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
         } else {
             if (loadIsCard){
+                loadIsCard = false;
                 resetLoadCard();
             }
             createCardAnim();
@@ -221,13 +227,13 @@ public class StartMenuActivity extends AppCompatActivity {
     }
 
     public void loadCancelButtonClicked(View view) {
-        resetLoadCard();
         loadIsCard = false;
+        resetLoadCard();
     }
 
     public void createCancelButtonClicked(View view) {
-        resetCreateCard();
         createIsCard = false;
+        resetCreateCard();
     }
 
 
