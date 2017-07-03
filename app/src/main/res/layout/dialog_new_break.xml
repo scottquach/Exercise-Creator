@@ -11,15 +11,15 @@
         android:layout_gravity="center_vertical"
         android:layout_weight=".5"
         android:text="@string/minutes"
-        android:gravity="right"
-        android:layout_marginRight="4dp"/>
+        android:gravity="end"
+        android:layout_marginEnd="4dp"/>
 
     <NumberPicker
         android:id="@+id/minutePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"></NumberPicker>
+        android:layout_weight="1"/>
 
 
     <TextView
@@ -28,14 +28,14 @@
         android:layout_gravity="center_vertical"
         android:layout_weight=".5"
         android:text="@string/seconds"
-        android:gravity="right"
-        android:layout_marginRight="4dp"/>
+        android:gravity="end"
+        android:layout_marginEnd="4dp"/>
     <NumberPicker
         android:id="@+id/secondPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"></NumberPicker>
+        android:layout_weight="1"/>
 
 
 

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +16,11 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class EditModeActivity extends AppCompatActivity {
 
@@ -65,7 +61,7 @@ public class EditModeActivity extends AppCompatActivity {
         }
 
         //changes action bar name based on exerciseName
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName);
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + getString(R.string.edit_mode));
 
         loadData();
         setUpRecycleView();
@@ -122,13 +118,13 @@ public class EditModeActivity extends AppCompatActivity {
 
     private void createTask(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New Task");
+        builder.setTitle(R.string.new_task);
 
         final EditText input = new EditText(this);
-        input.setHint("Task Name");
+        input.setHint(R.string.task_name);
         builder.setView(input);
 
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String task = input.getText().toString();
@@ -138,7 +134,7 @@ public class EditModeActivity extends AppCompatActivity {
                 updateRecycleView();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -150,7 +146,7 @@ public class EditModeActivity extends AppCompatActivity {
 
     private void createBreak(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Create Break");
+        builder.setTitle(R.string.create_break);
 
         LayoutInflater inflater = this.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_new_break, null);
@@ -164,19 +160,19 @@ public class EditModeActivity extends AppCompatActivity {
         secondNP.setMinValue(0);
         secondNP.setMaxValue(59);
 
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int minutes = minuteNP.getValue();
                 int seconds = secondNP.getValue();
                 int totalSeconds = convertToSeconds(minutes, seconds);
-                Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds: " + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
                 entries.add(String.valueOf(totalSeconds));
                 entryType.add(1);
                 updateRecycleView();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

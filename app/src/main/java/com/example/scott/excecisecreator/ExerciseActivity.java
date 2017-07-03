@@ -11,11 +11,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ExceriseActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class ExerciseActivity extends AppCompatActivity {
 
     private DataBaseHelper db;
 
-    private RecyclerView recyclerView;
+    @BindView(R.id.exerciseRecycleView) RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
     private String exerciseName;
@@ -27,23 +30,24 @@ public class ExceriseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_excerise);
+        setContentView(R.layout.activity_exercise);
 
         //initialization
         db = new DataBaseHelper(this);
-        recyclerView = (RecyclerView) findViewById(R.id.exerciseRecycleView);
+        ButterKnife.bind(this);
 
         //get exercise name to load
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             exerciseName = bundle.getString("name");
         }else{
-            Toast.makeText(this, "Error creating new exercise", Toast.LENGTH_SHORT).show();
-            Intent exitToHome = new Intent(ExceriseActivity.this, StartMenuActivity.class);
+            Toast.makeText(this, R.string.error_loading_exercise, Toast.LENGTH_SHORT).show();
+            Intent exitToHome = new Intent(ExerciseActivity.this, StartMenuActivity.class);
             startActivity(exitToHome);
         }
 
-        getSupportActionBar().setTitle(exerciseName + " Edit Mode");
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName);
+
 
         loadData();
         setUpRecycleView();

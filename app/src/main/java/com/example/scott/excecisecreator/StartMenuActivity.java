@@ -12,12 +12,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /*
 Research resources used
@@ -27,20 +31,21 @@ http://www.uwanttolearn.com/android/constraint-layout-animations-dynamic-constra
 
 public class StartMenuActivity extends AppCompatActivity {
 
-    private ConstraintLayout menuLayout;
     private ConstraintSet originalConstraint = new ConstraintSet();
     private ConstraintSet applyConstraintSet = new ConstraintSet();
 
-    private LinearLayout loadContainer;
-    private LinearLayout createContainer;
-
     private boolean loadIsCard, createIsCard, recyclerLoaded = false;
 
-    private Button createButton, loadButton;
+    @BindView(R.id.StartMenuLayout) ConstraintLayout menuLayout;
+    @BindView(R.id.loadExerciseContainer) LinearLayout loadContainer;
+    @BindView(R.id.createExerciseContainer) LinearLayout createContainer;
 
-    private EditText nameEditT;
 
-    private ListView exercisesListView;
+    @BindView(R.id.setNameEditText) TextView nameEditT;
+    @BindView(R.id.createButton) Button createButton;
+    @BindView(R.id.loadButton) Button loadButton;
+
+    @BindView(R.id.exercisesListView) ListView exercisesListView;
 
     private DataBaseHelper dbHelper;
 
@@ -50,15 +55,10 @@ public class StartMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start_menu);
 
         //initialize
-        menuLayout = (ConstraintLayout) findViewById(R.id.StartMenuLayout);
+        ButterKnife.bind(this);
+        
         applyConstraintSet.clone(menuLayout);
         originalConstraint.clone(menuLayout);
-        loadContainer = (LinearLayout) findViewById(R.id.loadExerciseContainer);
-        createContainer = (LinearLayout) findViewById(R.id.createExerciseContainer);
-        createButton = (Button) findViewById(R.id.createButton);
-        loadButton = (Button) findViewById(R.id.loadButton);
-        nameEditT = (EditText) findViewById(R.id.setNameEditText);
-        exercisesListView = (ListView) findViewById(R.id.exercisesListView);
         dbHelper = new DataBaseHelper(this);
     }
 
@@ -161,7 +161,7 @@ public class StartMenuActivity extends AppCompatActivity {
         applyConstraintSet.applyTo(menuLayout);
     }
 
-    /*Rsets the position of the
+    /*Resets the position of the
     create card from it's animated position
      */
     private void resetCreateCard() {
@@ -195,7 +195,7 @@ public class StartMenuActivity extends AppCompatActivity {
         if (createIsCard) {
             String newName = nameEditT.getText().toString();
             if (newName.equals("")) {
-                nameEditT.setError("Field cannot be blank");
+                nameEditT.setError(getString(R.string.blank_field));
             } else {
                 boolean doesExist = false;
                 ArrayList<String> currentNames = loadNames();
@@ -212,7 +212,7 @@ public class StartMenuActivity extends AppCompatActivity {
                     createExercise.putExtra("name", newName);
                     startActivity(createExercise);
                 } else {
-                    nameEditT.setError("That name already exists");
+                    nameEditT.setError(getString(R.string.name_already_exists));
                 }
             }
 
