@@ -50,10 +50,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "entries TEXT, type INTEGER)");
-
+        db.close();
     }
 
-    //ToDo complete this stuff
+    //ToDo Delete/Clear table and update Master TAble for names
     public void saveExerciseEdits(String tableName, ArrayList<String> entries, ArrayList<Integer> types) {
         SQLiteDatabase db = this.getWritableDatabase();
         //clear table
@@ -68,6 +68,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show();
             }
         }
+        db.close();
     }
 
     /*Return a cursor containing all of the names
@@ -115,6 +116,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tableName);
         db.delete(DATABASE_MASTER, tableName, null);
         Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+        db.close();
     }
 
 }

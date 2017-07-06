@@ -68,6 +68,13 @@ public class EditModeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+        updateRecycleView();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         saveData();
