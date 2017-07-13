@@ -74,9 +74,10 @@ public class StartMenuActivity extends AppCompatActivity {
         int count = cursor.getCount();
         Log.d("debug", String.valueOf(count));
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             while (cursor.moveToNext()) {
                 String temp = cursor.getString(0);
+                Log.d("debug", temp);
                 names.add(temp);
             }
         }else{
@@ -91,7 +92,6 @@ public class StartMenuActivity extends AppCompatActivity {
     the load CardView
      */
     private void loadListView() {
-        if (!recyclerLoaded){
             final ArrayList<String> names = loadNames();
             ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
             exercisesListView.setAdapter(adapter);
@@ -108,7 +108,6 @@ public class StartMenuActivity extends AppCompatActivity {
                     startActivity(openEditMode);
                 }
             });
-        }
     }
 
     /*Start morph animation for loading
@@ -223,7 +222,7 @@ public class StartMenuActivity extends AppCompatActivity {
                     dbHelper.saveNewExercise(newName);
 
                     Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
-                    createExercise.putExtra("name", "'" + newName + "'");
+                    createExercise.putExtra("name", newName);
                     startActivity(createExercise);
                 } else {
                     nameEditT.setError(getString(R.string.name_already_exists));

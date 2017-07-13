@@ -71,7 +71,7 @@ public class EditModeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadData();
-        updateRecycleView();
+        setUpRecycleView();
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -39,12 +40,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void saveNewExercise(String name) {
-        name = "'" + name + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("exerciseName", name);
         long newRow = db.insert(DATABASE_MASTER, null, values);
         if (newRow == -1) {
+            Log.d("debug", "Error saving data");
             Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show();
         }
 
