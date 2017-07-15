@@ -59,7 +59,7 @@ public class ExerciseActivity extends AppCompatActivity {
 //                        @Override
 //                        public void onError(String utteranceId) {}
 //                    });
-                }
+            }
             }
         });
         ButterKnife.bind(this);
@@ -123,7 +123,7 @@ public class ExerciseActivity extends AppCompatActivity {
             }while (dataCursor.moveToNext());
         }
 
-        exerciseSize = types.size();
+        exerciseSize = entries.size();
     }
 
     private void determineNextStep(){

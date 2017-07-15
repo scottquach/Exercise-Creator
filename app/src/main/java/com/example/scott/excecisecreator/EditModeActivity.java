@@ -54,6 +54,7 @@ public class EditModeActivity extends AppCompatActivity {
         if (extras != null){
             exerciseName = extras.getString("name");
             loadData();
+            setUpRecycleView();
         }else{
             Toast.makeText(this, "Error creating new exercise", Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(EditModeActivity.this, StartMenuActivity.class);
@@ -63,8 +64,6 @@ public class EditModeActivity extends AppCompatActivity {
         //changes action bar name based on exerciseName
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
 
-        loadData();
-        setUpRecycleView();
     }
 
     @Override
