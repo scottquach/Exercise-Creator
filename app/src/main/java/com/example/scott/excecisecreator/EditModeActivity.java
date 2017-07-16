@@ -3,6 +3,7 @@ package com.example.scott.excecisecreator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.example.scott.excecisecreator.fragments.BreakDialogFragment;
+import com.example.scott.excecisecreator.fragments.TaskDialogFragment;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -22,7 +25,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EditModeActivity extends AppCompatActivity {
+public class EditModeActivity extends AppCompatActivity implements BreakDialogFragment.BreakDialogListener,
+        TaskDialogFragment.TaskDialogListener{
 
     private String exerciseName;
 
@@ -115,86 +119,7 @@ public class EditModeActivity extends AppCompatActivity {
         dbHelper.saveExerciseEdits(exerciseName, entries, entryType);
     }
 
-    private void createTask(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.new_task);
 
-        final EditText input = new EditText(this);
-        input.setHint(R.string.task_name);
-        builder.setView(input);
-
-        builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                String task = input.getText().toString();
-                if(task.isEmpty()){
-                    input.setError("must not be empty");
-                }else{
-                    entries.add(task);
-                    entryType.add(0);
-                    updateRecycleView();
-                    dialog.dismiss();
-                }
-
-            }
-        });
-
-    }
-
-    private void createBreak(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.create_break);
-
-        LayoutInflater inflater = this.getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_new_break, null);
-
-        builder.setView(view);
-
-        final NumberPicker minuteNP = (NumberPicker) view.findViewById(R.id.minutePicker);
-        final NumberPicker secondNP = (NumberPicker) view.findViewById(R.id.secondPicker);
-        minuteNP.setMinValue(0);
-        minuteNP.setMaxValue(60);
-        secondNP.setMinValue(0);
-        secondNP.setMaxValue(59);
-
-        builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int minutes = minuteNP.getValue();
-                int seconds = secondNP.getValue();
-                int totalSeconds = convertToSeconds(minutes, seconds);
-                Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
-                entries.add(String.valueOf(totalSeconds));
-                entryType.add(1);
-                updateRecycleView();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
 
     private int convertToSeconds(int minute, int seconds){
         int totalSeconds;
@@ -208,11 +133,11 @@ public class EditModeActivity extends AppCompatActivity {
     }
 
     public void createBreakClicked(View view) {
-        createBreak();
+        BreakDialogFragment.newInstance().show(getFragmentManager(), "BREAK_DIALOG_FRAGMENT");
     }
 
     public void createTaskClicked(View view) {
-        createTask();
+        TaskDialogFragment.newInstance().show(getFragmentManager(), "TASK_DIALOG_FRAGMENT");
     }
 
     public void startExerciseButtonClicked(View view) {
@@ -225,5 +150,21 @@ public class EditModeActivity extends AppCompatActivity {
 
     public void deleteButtonClicked(View view) {
         dbHelper.deleteExercise(exerciseName);
+    }
+
+    @Override
+    public void createBreak(int minutes, int seconds) {
+        int totalSeconds = convertToSeconds(minutes, seconds);
+        Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
+        entries.add(String.valueOf(totalSeconds));
+        entryType.add(1);
+        updateRecycleView();
+    }
+
+    @Override
+    public void createTask(String task) {
+        entries.add(task);
+        entryType.add(0);
+        updateRecycleView();
     }
 }
