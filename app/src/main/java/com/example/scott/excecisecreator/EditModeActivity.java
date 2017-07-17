@@ -1,19 +1,13 @@
 package com.example.scott.excecisecreator;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.example.scott.excecisecreator.fragments.BreakDialogFragment;
@@ -97,8 +91,8 @@ public class EditModeActivity extends AppCompatActivity implements BreakDialogFr
 
         if (dataCursor.moveToFirst()){
 
-            String entry = "";
-            int type = 0;
+            String entry;
+            int type;
 
             do{
                 entry = dataCursor.getString(1);
@@ -141,7 +135,6 @@ public class EditModeActivity extends AppCompatActivity implements BreakDialogFr
     }
 
     public void startExerciseButtonClicked(View view) {
-        saveData();
         Intent startExercise = new Intent(EditModeActivity.this, ExerciseActivity.class);
         startExercise.putExtra("name", exerciseName);
         startActivity(startExercise);

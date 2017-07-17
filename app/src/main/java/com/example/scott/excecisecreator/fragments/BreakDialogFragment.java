@@ -3,16 +3,13 @@ package com.example.scott.excecisecreator.fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
-import com.example.scott.excecisecreator.EditModeActivity;
 import com.example.scott.excecisecreator.R;
 
 /**
