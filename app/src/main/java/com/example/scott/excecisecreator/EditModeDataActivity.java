@@ -2,7 +2,6 @@ package com.example.scott.excecisecreator;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.scott.excecisecreator.database.DataBaseHelper;
 import com.example.scott.excecisecreator.fragments.BreakDialogFragment;
 import com.example.scott.excecisecreator.fragments.TaskDialogFragment;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -17,9 +17,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class EditModeActivity extends AppCompatActivity implements BreakDialogFragment.BreakDialogListener,
+public class EditModeDataActivity extends BaseDataActivity implements BreakDialogFragment.BreakDialogListener,
         TaskDialogFragment.TaskDialogListener{
 
     private String exerciseName;
@@ -42,26 +41,27 @@ public class EditModeActivity extends AppCompatActivity implements BreakDialogFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mode);
 
-        ButterKnife.bind(this);
-
         //initialization
         dbHelper = new DataBaseHelper(this);
+
+        //changes action bar name based on exerciseName
 
         //Get exercise name to be edited
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             exerciseName = extras.getString("name");
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
+            exerciseName = exerciseName.replaceAll("\\s+", "");
             loadData();
             setUpRecycleView();
         }else{
             Toast.makeText(this, "Error creating new exercise", Toast.LENGTH_SHORT).show();
-            Intent exitToHome = new Intent(EditModeActivity.this, StartMenuActivity.class);
+            Intent exitToHome = new Intent(EditModeDataActivity.this, StartMenuDataActivity.class);
             startActivity(exitToHome);
         }
 
         //changes action bar name based on exerciseName
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
-
     }
 
     @Override
@@ -90,10 +90,8 @@ public class EditModeActivity extends AppCompatActivity implements BreakDialogFr
         Cursor dataCursor = dbHelper.getExercise(exerciseName);
 
         if (dataCursor.moveToFirst()){
-
             String entry;
             int type;
-
             do{
                 entry = dataCursor.getString(1);
                 type = dataCursor.getInt(2);
@@ -135,7 +133,7 @@ public class EditModeActivity extends AppCompatActivity implements BreakDialogFr
     }
 
     public void startExerciseButtonClicked(View view) {
-        Intent startExercise = new Intent(EditModeActivity.this, ExerciseActivity.class);
+        Intent startExercise = new Intent(EditModeDataActivity.this, RoutineDataActivity.class);
         startExercise.putExtra("name", exerciseName);
         startActivity(startExercise);
         finish();
@@ -143,12 +141,13 @@ public class EditModeActivity extends AppCompatActivity implements BreakDialogFr
 
     public void deleteButtonClicked(View view) {
         dbHelper.deleteExercise(exerciseName);
+        finish();
     }
 
     @Override
     public void createBreak(int minutes, int seconds) {
         int totalSeconds = convertToSeconds(minutes, seconds);
-        Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditModeDataActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
         entries.add(String.valueOf(totalSeconds));
         entryType.add(1);
         updateRecycleView();

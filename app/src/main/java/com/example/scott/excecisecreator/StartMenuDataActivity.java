@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -17,10 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.scott.excecisecreator.database.DataBaseHelper;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /*
 Research resources used
@@ -28,27 +28,34 @@ https://android.jlelse.eu/make-your-app-shine-2-how-to-make-a-button-morph-into-
 http://www.uwanttolearn.com/android/constraint-layout-animations-dynamic-constraints-ui-java-hell/
  */
 
-public class StartMenuActivity extends AppCompatActivity {
+public class StartMenuDataActivity extends BaseDataActivity {
 
     private ConstraintSet originalConstraint = new ConstraintSet();
     private ConstraintSet applyConstraintSet = new ConstraintSet();
 
     private boolean loadIsCard, createIsCard, recyclerLoaded = false;
 
-    @BindView(R.id.StartMenuLayout) ConstraintLayout menuLayout;
-    @BindView(R.id.loadExerciseContainer) LinearLayout loadContainer;
-    @BindView(R.id.loadExerciseInnerContainer) LinearLayout loadInnerContainer;
-    @BindView(R.id.createExerciseContainer) LinearLayout createContainer;
-    @BindView(R.id.createExerciseInnerContainer) LinearLayout createInnerContainer;
+    @BindView(R.id.StartMenuLayout)
+    ConstraintLayout menuLayout;
+    @BindView(R.id.loadExerciseContainer)
+    LinearLayout loadContainer;
+    @BindView(R.id.loadExerciseInnerContainer)
+    LinearLayout loadInnerContainer;
+    @BindView(R.id.createExerciseContainer)
+    LinearLayout createContainer;
+    @BindView(R.id.createExerciseInnerContainer)
+    LinearLayout createInnerContainer;
 
 
-    @BindView(R.id.setNameEditText) TextView nameEditT;
-    @BindView(R.id.createButton) Button createButton;
-    @BindView(R.id.loadButton) Button loadButton;
+    @BindView(R.id.setNameEditText)
+    TextView nameEditT;
+    @BindView(R.id.createButton)
+    Button createButton;
+    @BindView(R.id.loadButton)
+    Button loadButton;
 
-    @BindView(R.id.exercisesListView) ListView exercisesListView;
-
-    private DataBaseHelper dbHelper;
+    @BindView(R.id.exercisesListView)
+    ListView exercisesListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +63,15 @@ public class StartMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start_menu);
 
         //initialize
-        ButterKnife.bind(this);
 
         applyConstraintSet.clone(menuLayout);
         originalConstraint.clone(menuLayout);
-        dbHelper = new DataBaseHelper(this);
     }
 
     /*Returns an ArrayLists of the names of
     saved exercises
      */
-    private ArrayList<String> loadNames() {
+    private ArrayList<String> loadExerciseNames() {
         ArrayList<String> names = new ArrayList<String>();
         Cursor cursor = dbHelper.getExerciseNames();
 
@@ -74,12 +79,13 @@ public class StartMenuActivity extends AppCompatActivity {
         Log.d("debug", String.valueOf(count));
 
         if (cursor != null && cursor.moveToFirst()) {
-            while (cursor.moveToNext()) {
+            Log.d("debug", "Cursor wasn't empty");
+            do {
                 String temp = cursor.getString(0);
                 Log.d("debug", temp);
                 names.add(temp);
-            }
-        }else{
+            } while (cursor.moveToNext());
+        } else {
             Log.d("debug", "no saved exercises");
         }
 
@@ -91,22 +97,22 @@ public class StartMenuActivity extends AppCompatActivity {
     the load CardView
      */
     private void loadListView() {
-            final ArrayList<String> names = loadNames();
-            ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
-            exercisesListView.setAdapter(adapter);
+        final ArrayList<String> names = loadExerciseNames();
+        ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
+        exercisesListView.setAdapter(adapter);
 
-            recyclerLoaded = true;
+        recyclerLoaded = true;
 
-            exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    recyclerLoaded = false;
-                    String exerciseName = names.get(position);
-                    Intent openEditMode = new Intent(StartMenuActivity.this, ExerciseActivity.class);
-                    openEditMode.putExtra("name", exerciseName);
-                    startActivity(openEditMode);
-                }
-            });
+        exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                recyclerLoaded = false;
+                String exerciseName = names.get(position);
+                Intent openEditMode = new Intent(StartMenuDataActivity.this, RoutineDataActivity.class);
+                openEditMode.putExtra("name", exerciseName);
+                startActivity(openEditMode);
+            }
+        });
     }
 
     /*Start morph animation for loading
@@ -121,7 +127,7 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
-        for (int i = 0; i < loadInnerContainer.getChildCount(); i++){
+        for (int i = 0; i < loadInnerContainer.getChildCount(); i++) {
             loadInnerContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
         loadButton.setVisibility(View.GONE);
@@ -140,7 +146,7 @@ public class StartMenuActivity extends AppCompatActivity {
             loadContainer.getChildAt(i).setVisibility(View.GONE);
         }
 
-        for (int i = 0; i < loadInnerContainer.getChildCount(); i++){
+        for (int i = 0; i < loadInnerContainer.getChildCount(); i++) {
             loadInnerContainer.getChildAt(i).setVisibility(View.GONE);
         }
         loadInnerContainer.setVisibility(View.VISIBLE);
@@ -162,7 +168,7 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
-        for (int i = 0; i < createInnerContainer.getChildCount(); i++){
+        for (int i = 0; i < createInnerContainer.getChildCount(); i++) {
             createInnerContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
@@ -178,7 +184,7 @@ public class StartMenuActivity extends AppCompatActivity {
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.GONE);
         }
-        for (int i = 0; i < createInnerContainer.getChildCount(); i++){
+        for (int i = 0; i < createInnerContainer.getChildCount(); i++) {
             createInnerContainer.getChildAt(i).setVisibility(View.GONE);
         }
         createInnerContainer.setVisibility(View.VISIBLE);
@@ -190,7 +196,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
     public void loadButtonClicked(View view) {
         if (!loadIsCard) {
-            if (createIsCard){
+            if (createIsCard) {
                 createIsCard = false;
                 resetCreateCard();
             }
@@ -205,14 +211,15 @@ public class StartMenuActivity extends AppCompatActivity {
      */
     public void createButtonClicked(View view) {
         if (createIsCard) {
-            String newName = nameEditT.getText().toString();
+            String newName = nameEditT.getText().toString().trim();
             if (newName.equals("")) {
                 nameEditT.setError(getString(R.string.blank_field));
             } else {
                 boolean doesExist = false;
-                ArrayList<String> currentNames = loadNames();
+                ArrayList<String> currentNames = loadExerciseNames();
                 for (String current : currentNames) {
                     if (newName.equals(current)) {
+                        Log.d("name matching", newName + " : " + current);
                         doesExist = true;
                     }
                 }
@@ -220,7 +227,7 @@ public class StartMenuActivity extends AppCompatActivity {
                 if (!doesExist) {
                     dbHelper.saveNewExercise(newName);
 
-                    Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                    Intent createExercise = new Intent(StartMenuDataActivity.this, EditModeDataActivity.class);
                     createExercise.putExtra("name", newName);
                     startActivity(createExercise);
                 } else {
@@ -229,7 +236,7 @@ public class StartMenuActivity extends AppCompatActivity {
             }
 
         } else {
-            if (loadIsCard){
+            if (loadIsCard) {
                 loadIsCard = false;
                 resetLoadCard();
             }
