@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -46,25 +44,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(MasterTable.COLUMN_CONDENSED_NAME, condensedName);
         values.put(MasterTable.COLUMN_FULL_NAME, fullName);
-        if (db.insert(MasterTable.TABLE_NAME, null, values) == -1) Timber.e("Error creating new routine reference");
+        if (db.insert(MasterTable.TABLE_NAME, null, values) == -1) {
+            Timber.e("Error creating new routine reference");
+        } else Timber.d("new routine saved");
+
+        db.execSQL(RoutineTable.createTable(condensedName));
     }
 
     //ToDo Delete/Clear table and update Master TAble for names
-    public void saveExerciseEdits(String tableName, ArrayList<String> entries, ArrayList<Integer> types) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void saveRoutineEdits(String tableName, ArrayList<String> entries, ArrayList<Integer> breakValues,
+                                 ArrayList<Integer> types) {
+        if (!entries.isEmpty()) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            //clear table
+             db.delete(tableName, null, null);
+            ContentValues values = new ContentValues();
 
-        //clear table
-        db.delete(tableName, null, null);
-
-        ContentValues values = new ContentValues();
-
-        for (int i = 0; i < entries.size(); i++) {
-            values.put(RoutineTable.COLUMN_ENTRY, entries.get(i));
-            values.put(RoutineTable.COLUMN_TYPE, types.get(i));
-            if (db.insert(tableName, null, values) == -1) Timber.e("Error saving edits");
+            for (int i = 0; i < entries.size(); i++) {
+                Timber.d("looping through routine edits");
+                values.put(RoutineTable.COLUMN_ENTRY, entries.get(i));
+                values.put(RoutineTable.COLUMN_BREAK_VALUE, breakValues.get(i));
+                values.put(RoutineTable.COLUMN_TYPE, types.get(i));
+                Timber.d(entries.get(i));
+                Timber.d(breakValues.get(i).toString());
+                Timber.d(types.get(i).toString());
+                if (db.insert(tableName, null, values) == -1) {
+                    Timber.e("Error saving edits");
+                } else Timber.d("routine edits saved");
+                values.clear();
+            }
 
         }
-
     }
 
     public String getFullRoutineName(String condensedName) {
@@ -87,7 +97,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public Cursor getExerciseNames() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(MasterTable.TABLE_NAME, new String[] {MasterTable.COLUMN_FULL_NAME},
+        Cursor cursor = db.query(MasterTable.TABLE_NAME, new String[]{MasterTable.COLUMN_FULL_NAME},
                 null, null, null, null, null);
 
         return cursor;
@@ -97,8 +107,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     of the passed in exercise name tableName.
      */
     public Cursor getExercise(String tableName) {
+        Timber.d("getExercise: " + tableName);
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(tableName, new String[] {RoutineTable.COLUMN_ENTRY, RoutineTable.COLUMN_TYPE},
+        Cursor cursor = db.query(tableName, null,
                 null, null, null, null, null);
 
         return cursor;
@@ -110,7 +121,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deleteExercise(String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE TABLE IF EXISTS " + tableName);
-        db.delete(MasterTable.TABLE_NAME, MasterTable.COLUMN_CONDENSED_NAME + "=?", new String[] {tableName});
+        db.delete(MasterTable.TABLE_NAME, MasterTable.COLUMN_CONDENSED_NAME + "=?", new String[]{tableName});
         Timber.d("table " + tableName + " deleted");
     }
 

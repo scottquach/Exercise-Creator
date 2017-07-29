@@ -16,11 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.scott.excecisecreator.database.DataBaseHelper;
+import com.example.scott.excecisecreator.database.KeyConstants;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 /*
 Research resources used
@@ -28,34 +29,25 @@ https://android.jlelse.eu/make-your-app-shine-2-how-to-make-a-button-morph-into-
 http://www.uwanttolearn.com/android/constraint-layout-animations-dynamic-constraints-ui-java-hell/
  */
 
-public class StartMenuDataActivity extends BaseDataActivity {
+public class StartMenuActivity extends BaseDataActivity {
 
     private ConstraintSet originalConstraint = new ConstraintSet();
     private ConstraintSet applyConstraintSet = new ConstraintSet();
 
-    private boolean loadIsCard, createIsCard, recyclerLoaded = false;
+    private boolean loadIsCard, createIsCard = false;
 
-    @BindView(R.id.StartMenuLayout)
-    ConstraintLayout menuLayout;
-    @BindView(R.id.loadExerciseContainer)
-    LinearLayout loadContainer;
-    @BindView(R.id.loadExerciseInnerContainer)
-    LinearLayout loadInnerContainer;
-    @BindView(R.id.createExerciseContainer)
-    LinearLayout createContainer;
-    @BindView(R.id.createExerciseInnerContainer)
-    LinearLayout createInnerContainer;
+    @BindView(R.id.layout_start_menu) ConstraintLayout menuLayout;
+    @BindView(R.id.container_load_routine) LinearLayout loadContainer;
+    @BindView(R.id.inner_container_load_routine) LinearLayout loadInnerContainer;
+    @BindView(R.id.container_create_routine) LinearLayout createContainer;
+    @BindView(R.id.inner_container_create_routine) LinearLayout createInnerContainer;
 
 
-    @BindView(R.id.setNameEditText)
-    TextView nameEditT;
-    @BindView(R.id.createButton)
-    Button createButton;
-    @BindView(R.id.loadButton)
-    Button loadButton;
+    @BindView(R.id.text_set_name) TextView nameEditT;
+    @BindView(R.id.button_create) Button createButton;
+    @BindView(R.id.button_load) Button loadButton;
 
-    @BindView(R.id.exercisesListView)
-    ListView exercisesListView;
+    @BindView(R.id.list_view_routines) ListView exercisesListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,23 +65,21 @@ public class StartMenuDataActivity extends BaseDataActivity {
      */
     private ArrayList<String> loadExerciseNames() {
         ArrayList<String> names = new ArrayList<String>();
-        Cursor cursor = dbHelper.getExerciseNames();
+        Cursor dataCursor = dbHelper.getExerciseNames();
 
-        int count = cursor.getCount();
-        Log.d("debug", String.valueOf(count));
+        int count = dataCursor.getCount();
+        Timber.d("Exercise name cursor count: " + count);
 
-        if (cursor != null && cursor.moveToFirst()) {
-            Log.d("debug", "Cursor wasn't empty");
+        if (dataCursor.moveToFirst()) {
             do {
-                String temp = cursor.getString(0);
-                Log.d("debug", temp);
+                String temp = dataCursor.getString(0);
                 names.add(temp);
-            } while (cursor.moveToNext());
+                Timber.d("Iterated name was: " + temp);
+            } while (dataCursor.moveToNext());
         } else {
-            Log.d("debug", "no saved exercises");
+            Timber.d("There are no saved exercises");
         }
-
-        cursor.close();
+        dataCursor.close();
         return names;
     }
 
@@ -101,14 +91,11 @@ public class StartMenuDataActivity extends BaseDataActivity {
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
         exercisesListView.setAdapter(adapter);
 
-        recyclerLoaded = true;
-
         exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                recyclerLoaded = false;
                 String exerciseName = names.get(position);
-                Intent openEditMode = new Intent(StartMenuDataActivity.this, RoutineDataActivity.class);
+                Intent openEditMode = new Intent(StartMenuActivity.this, RoutineActivity.class);
                 openEditMode.putExtra("name", exerciseName);
                 startActivity(openEditMode);
             }
@@ -121,8 +108,8 @@ public class StartMenuDataActivity extends BaseDataActivity {
     private void loadCardAnim() {
         TransitionManager.beginDelayedTransition(menuLayout);
 
-        applyConstraintSet.centerVertically(R.id.loadExerciseCard, R.id.StartMenuLayout);
-        applyConstraintSet.setMargin(R.id.loadExerciseCard, ConstraintSet.TOP, 0);
+        applyConstraintSet.centerVertically(R.id.card_load_routine, R.id.layout_start_menu);
+        applyConstraintSet.setMargin(R.id.card_load_routine, ConstraintSet.TOP, 0);
 
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
@@ -162,8 +149,8 @@ public class StartMenuDataActivity extends BaseDataActivity {
     private void createCardAnim() {
         TransitionManager.beginDelayedTransition(menuLayout);
 
-        applyConstraintSet.centerVertically(R.id.createExerciseCard, R.id.StartMenuLayout);
-        applyConstraintSet.setMargin(R.id.createExerciseCard, ConstraintSet.BOTTOM, 0);
+        applyConstraintSet.centerVertically(R.id.card_create_route, R.id.layout_start_menu);
+        applyConstraintSet.setMargin(R.id.card_create_route, ConstraintSet.BOTTOM, 0);
 
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.VISIBLE);
@@ -219,16 +206,17 @@ public class StartMenuDataActivity extends BaseDataActivity {
                 ArrayList<String> currentNames = loadExerciseNames();
                 for (String current : currentNames) {
                     if (newName.equals(current)) {
-                        Log.d("name matching", newName + " : " + current);
+                        Timber.d("name already exists");
                         doesExist = true;
+                        break;
                     }
                 }
 
                 if (!doesExist) {
-                    dbHelper.saveNewExercise(newName);
+                    dbHelper.saveNewRoutine(newName);
 
-                    Intent createExercise = new Intent(StartMenuDataActivity.this, EditModeDataActivity.class);
-                    createExercise.putExtra("name", newName);
+                    Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                    createExercise.putExtra(KeyConstants.NAME, newName);
                     startActivity(createExercise);
                 } else {
                     nameEditT.setError(getString(R.string.name_already_exists));

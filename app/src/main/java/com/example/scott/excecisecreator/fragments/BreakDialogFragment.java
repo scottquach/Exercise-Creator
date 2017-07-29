@@ -55,8 +55,8 @@ public class BreakDialogFragment extends DialogFragment{
 
         builder.setView(view);
 
-        final NumberPicker minuteNP = (NumberPicker) view.findViewById(R.id.minutePicker);
-        final NumberPicker secondNP = (NumberPicker) view.findViewById(R.id.secondPicker);
+        final NumberPicker minuteNP = (NumberPicker) view.findViewById(R.id.picker_minute);
+        final NumberPicker secondNP = (NumberPicker) view.findViewById(R.id.picker_second);
         minuteNP.setMinValue(0);
         minuteNP.setMaxValue(60);
         secondNP.setMinValue(0);

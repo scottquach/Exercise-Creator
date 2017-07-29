@@ -11,18 +11,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RoutineDataActivity"
+            android:name=".RoutineActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".StartMenuDataActivity">
+        <activity android:name=".StartMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditModeDataActivity"></activity>
+        <activity android:name=".EditModeActivity"></activity>
     </application>
 
 </manifest>

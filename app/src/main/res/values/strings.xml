@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="minutes">Minutes</string>
     <string name="seconds">Seconds</string>
-    <string name="error_loading_exercise">Error loading exercise</string>
+    <string name="error_loading_routine">Error loading routine</string>
     <string name="blank_field">Field cannot be blank</string>
     <string name="name_already_exists">That name already exists</string>
     <string name="cancel">Cancel</string>

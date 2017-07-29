@@ -2,66 +2,56 @@ package com.example.scott.excecisecreator;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.scott.excecisecreator.database.DataBaseHelper;
+import com.example.scott.excecisecreator.database.KeyConstants;
+import com.example.scott.excecisecreator.databinding.ActivityEditModeBinding;
 import com.example.scott.excecisecreator.fragments.BreakDialogFragment;
 import com.example.scott.excecisecreator.fragments.TaskDialogFragment;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
-import butterknife.BindView;
+import timber.log.Timber;
 
-public class EditModeDataActivity extends BaseDataActivity implements BreakDialogFragment.BreakDialogListener,
+
+public class EditModeActivity extends BaseDataActivity implements BreakDialogFragment.BreakDialogListener,
         TaskDialogFragment.TaskDialogListener{
 
     private String exerciseName;
 
-    @BindView(R.id.editExerciseRecycleView) RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
     private ArrayList<String> entries = new ArrayList<>();
-
+    private ArrayList<Integer> breakValues = new ArrayList<>();
     //0 represents a task, and 1 represents a break
     private ArrayList<Integer> entryType = new ArrayList<Integer>();
 
-    private DataBaseHelper dbHelper;
-
-    @BindView(R.id.addTaskButton) FloatingActionButton addTaskButton;
-    @BindView(R.id.addBreakButton) FloatingActionButton addBreakButton;
+    ActivityEditModeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_mode);
-
-        //initialization
-        dbHelper = new DataBaseHelper(this);
-
-        //changes action bar name based on exerciseName
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_mode);
 
         //Get exercise name to be edited
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            exerciseName = extras.getString("name");
+            Timber.d("extras were not null");
+            exerciseName = extras.getString(KeyConstants.NAME);
             if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
             exerciseName = exerciseName.replaceAll("\\s+", "");
+
             loadData();
             setUpRecycleView();
         }else{
-            Toast.makeText(this, "Error creating new exercise", Toast.LENGTH_SHORT).show();
-            Intent exitToHome = new Intent(EditModeDataActivity.this, StartMenuDataActivity.class);
+            Toast.makeText(this, getString(R.string.error_loading_routine), Toast.LENGTH_SHORT).show();
+            Intent exitToHome = new Intent(EditModeActivity.this, StartMenuActivity.class);
             startActivity(exitToHome);
         }
-
-        //changes action bar name based on exerciseName
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
     }
 
     @Override
@@ -72,10 +62,10 @@ public class EditModeDataActivity extends BaseDataActivity implements BreakDialo
 
     private void setUpRecycleView(){
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        binding.recycleViewEditMode.setLayoutManager(layoutManager);
 
         adapter = new RecyclerAdapter(entries, this);
-        recyclerView.setAdapter(adapter);
+        binding.recycleViewEditMode.setAdapter(adapter);
     }
 
     private void updateRecycleView(){
@@ -87,28 +77,30 @@ public class EditModeDataActivity extends BaseDataActivity implements BreakDialo
     between tasks and breaks
      */
     private void loadData(){
+        Timber.d("load data called");
         Cursor dataCursor = dbHelper.getExercise(exerciseName);
 
         if (dataCursor.moveToFirst()){
-            String entry;
-            int type;
             do{
-                entry = dataCursor.getString(1);
-                type = dataCursor.getInt(2);
-                entries.add(entry);
-                entryType.add(type);
-            }while (dataCursor.moveToNext());
+                entries.add(dataCursor.getString(1));
+                breakValues.add(dataCursor.getInt(2));
+                entryType.add(dataCursor.getInt(3));
 
-        }else{
-            Log.d("debug", "error loading cursor data");
+                Timber.d("entry: " + dataCursor.getString(1) + " type: " + dataCursor.getInt(3));
+            }while (dataCursor.moveToNext());
+        } else {
+            Timber.d("loadData cursor was null");
         }
+
+        dataCursor.close();
     }
 
     /*Saves the edited data back into
     the db
      */
     private void saveData(){
-        dbHelper.saveExerciseEdits(exerciseName, entries, entryType);
+
+        dbHelper.saveRoutineEdits(exerciseName, entries, breakValues, entryType);
     }
 
 
@@ -124,17 +116,17 @@ public class EditModeDataActivity extends BaseDataActivity implements BreakDialo
         }
     }
 
-    public void createBreakClicked(View view) {
-        BreakDialogFragment.newInstance().show(getFragmentManager(), "BREAK_DIALOG_FRAGMENT");
-    }
-
     public void createTaskClicked(View view) {
         TaskDialogFragment.newInstance().show(getFragmentManager(), "TASK_DIALOG_FRAGMENT");
     }
 
+    public void createBreakClicked(View view) {
+        BreakDialogFragment.newInstance().show(getFragmentManager(), "BREAK_DIALOG_FRAGMENT");
+    }
+
     public void startExerciseButtonClicked(View view) {
-        Intent startExercise = new Intent(EditModeDataActivity.this, RoutineDataActivity.class);
-        startExercise.putExtra("name", exerciseName);
+        Intent startExercise = new Intent(EditModeActivity.this, RoutineActivity.class);
+        startExercise.putExtra(KeyConstants.NAME, exerciseName);
         startActivity(startExercise);
         finish();
     }
@@ -145,18 +137,22 @@ public class EditModeDataActivity extends BaseDataActivity implements BreakDialo
     }
 
     @Override
-    public void createBreak(int minutes, int seconds) {
-        int totalSeconds = convertToSeconds(minutes, seconds);
-        Toast.makeText(EditModeDataActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
-        entries.add(String.valueOf(totalSeconds));
-        entryType.add(1);
+    public void createTask(String task) {
+        entries.add(task);
+        breakValues.add(0);
+        entryType.add(KeyConstants.TASK);
         updateRecycleView();
     }
 
     @Override
-    public void createTask(String task) {
-        entries.add(task);
-        entryType.add(0);
+    public void createBreak(int minutes, int seconds) {
+        int totalSeconds = convertToSeconds(minutes, seconds);
+        Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
+        entries.add("Minutes: " + String.valueOf(minutes) + " Seconds: " + String.valueOf(seconds));
+        breakValues.add(totalSeconds);
+        entryType.add(KeyConstants.BREAK);
         updateRecycleView();
     }
+
+
 }

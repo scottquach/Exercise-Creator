@@ -6,30 +6,29 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.scott.excecisecreator.database.DataBaseHelper;
+import com.example.scott.excecisecreator.database.KeyConstants;
 import com.pacific.timer.Rx2Timer;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
-public class RoutineDataActivity extends BaseDataActivity {
+public class RoutineActivity extends BaseDataActivity {
 
-    private DataBaseHelper db;
-
-    @BindView(R.id.exerciseRecycleView)
+    @BindView(R.id.recycle_view_routines)
     RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
     private String exerciseName;
 
     private ArrayList<String> entries = new ArrayList<>();
-    private ArrayList<Integer> types = new ArrayList<>(); //0 represents a task, 1 represents a break
+    private ArrayList<Integer> breakValues = new ArrayList<>();
+    private ArrayList<Integer> entryType = new ArrayList<>(); //0 represents a task, 1 represents a break
 
     private TextToSpeech tts;
 
@@ -42,7 +41,6 @@ public class RoutineDataActivity extends BaseDataActivity {
         setContentView(R.layout.activity_exercise);
 
         //initialization
-        db = new DataBaseHelper(this);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -58,11 +56,12 @@ public class RoutineDataActivity extends BaseDataActivity {
             exerciseName = bundle.getString("name");
             if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName);
             exerciseName = exerciseName.replaceAll("\\s+", "");
+
             loadData();
             setUpRecycleView();
         }else{
-            Toast.makeText(this, R.string.error_loading_exercise, Toast.LENGTH_SHORT).show();
-            Intent exitToHome = new Intent(RoutineDataActivity.this, StartMenuDataActivity.class);
+            Toast.makeText(this, R.string.error_loading_routine, Toast.LENGTH_SHORT).show();
+            Intent exitToHome = new Intent(RoutineActivity.this, StartMenuActivity.class);
             startActivity(exitToHome);
         }
     }
@@ -91,22 +90,27 @@ public class RoutineDataActivity extends BaseDataActivity {
         adapter.notifyDataSetChanged();
     }
 
-    /*fill the ArrayLists entries and types with the appropriate
+    /*fill the ArrayLists entries and entryType with the appropriate
     values from the db table named exerciseName
      */
     private void loadData() {
-        Cursor dataCursor = db.getExercise(exerciseName);
+        Cursor dataCursor = dbHelper.getExercise(exerciseName);
 
         String entry;
+        int dataValue;
         int type;
 
         if (dataCursor.moveToFirst()) {
             do {
                 entry = dataCursor.getString(1);
-                type = dataCursor.getInt(2);
+                dataValue = dataCursor.getInt(2);
+                type = dataCursor.getInt(3);
 
                 entries.add(entry);
-                types.add(type);
+                breakValues.add(dataCursor.getInt(2));
+                entryType.add(type);
+
+                Timber.d("Entry: " + entry + " dataValue: " + dataValue +" Type: " + entryType);
             } while (dataCursor.moveToNext());
         }
 
@@ -115,16 +119,16 @@ public class RoutineDataActivity extends BaseDataActivity {
 
     private void determineNextStep() {
         if (step < exerciseSize) {
-            if (types.get(step) == 0) {
-                Log.d("step count", String.valueOf(step) + "was zero");
+            if (entryType.get(step) == 0) {
+                Timber.d("current type is 0");
                 playTask(entries.get(step));
-            } else if (types.get(step) == 1) {
-                Log.d("step count", String.valueOf(step) + "was one");
-                startBreak(Integer.valueOf(entries.get(step)));
+            } else if (entryType.get(step) == 1) {
+                Timber.d("current type is 1");
+                startBreak(Integer.valueOf(breakValues.get(step)));
             }
         } else {
             step = 0;
-            Log.d("step count", "step reset to zero");
+            Timber.d("Step reset to zero");
         }
 
     }
@@ -159,8 +163,8 @@ public class RoutineDataActivity extends BaseDataActivity {
     }
 
     public void editModeButtonClicked(View view) {
-        Intent openEditMode = new Intent(RoutineDataActivity.this, EditModeDataActivity.class);
-        openEditMode.putExtra("name", exerciseName);
+        Intent openEditMode = new Intent(RoutineActivity.this, EditModeActivity.class);
+        openEditMode.putExtra(KeyConstants.NAME, exerciseName);
         startActivity(openEditMode);
         finish();
     }

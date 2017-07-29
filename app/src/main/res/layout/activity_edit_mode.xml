@@ -1,73 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.scott.excecisecreator.EditModeDataActivity"
-    android:background="@color/backgroundColor">
+<layout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/editExerciseRecycleView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03" />
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
+        tools:context="com.example.scott.excecisecreator.EditModeActivity">
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:fab_icon="@drawable/ic_play_arrow"
-        android:onClick="startExerciseButtonClicked"
-        />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_view_edit_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.03" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        app:fab_labelStyle="@id/fab_label"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <com.getbase.floatingactionbutton.AddFloatingActionButton
-            android:id="@+id/addTaskButton"
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="createTaskClicked"
-            app:fab_size="mini"
-            app:fab_title="Create Task" />
+            android:onClick="startExerciseButtonClicked"
+            app:fab_icon="@drawable/ic_play_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
-        <com.getbase.floatingactionbutton.AddFloatingActionButton
-            android:id="@+id/addBreakButton"
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="createBreakClicked"
-            app:fab_size="mini"
-            app:fab_title="Add Break" />
+            android:layout_gravity="end"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="0dp"
+            app:fab_labelStyle="@id/fab_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
-        <com.getbase.floatingactionbutton.AddFloatingActionButton
-            android:id="@+id/deleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="deleteButtonClicked"
-            app:fab_size="mini"
-            app:fab_title="Delete"
-            app:fab_icon="@drawable/ic_delete"/>
+            <com.getbase.floatingactionbutton.AddFloatingActionButton
+                android:id="@+id/button_add_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="createTaskClicked"
+                app:fab_size="mini"
+                app:fab_title="Create Task" />
 
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+            <com.getbase.floatingactionbutton.AddFloatingActionButton
+                android:id="@+id/button_add_break"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="createBreakClicked"
+                app:fab_size="mini"
+                app:fab_title="Add Break" />
+
+            <com.getbase.floatingactionbutton.AddFloatingActionButton
+                android:id="@+id/button_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="deleteButtonClicked"
+                app:fab_icon="@drawable/ic_delete"
+                app:fab_size="mini"
+                app:fab_title="Delete" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>
