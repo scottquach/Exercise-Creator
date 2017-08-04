@@ -1,11 +1,15 @@
 package com.example.scott.excecisecreator;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.View;
 import android.widget.Toast;
 
@@ -37,6 +41,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_mode);
 
+        setUpWindowTransitions();
+
         //Get exercise name to be edited
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -55,9 +61,23 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+//        loadData();
+//        updateRecycleView();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         saveData();
+    }
+
+    private void setUpWindowTransitions(){
+        Fade slide = new Fade();
+        slide.setDuration(1000);
+        getWindow().setEnterTransition(slide);
+        getWindow().setExitTransition(slide);
     }
 
     private void setUpRecycleView(){
@@ -125,10 +145,12 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     }
 
     public void startExerciseButtonClicked(View view) {
+        ActivityOptions transitionActivityOptions = ActivityOptions
+                .makeSceneTransitionAnimation(EditModeActivity.this, binding.buttonPlay, getString(R.string.transition_button_play));
+
         Intent startExercise = new Intent(EditModeActivity.this, RoutineActivity.class);
         startExercise.putExtra(KeyConstants.NAME, exerciseName);
-        startActivity(startExercise);
-        finish();
+        startActivity(startExercise, transitionActivityOptions.toBundle());
     }
 
     public void deleteButtonClicked(View view) {

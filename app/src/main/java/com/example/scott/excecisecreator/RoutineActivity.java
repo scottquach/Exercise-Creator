@@ -1,11 +1,15 @@
 package com.example.scott.excecisecreator;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,10 +39,13 @@ public class RoutineActivity extends BaseDataActivity {
     private int step = 0;
     private int exerciseSize = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
+
+        setupWindowTransitions();
 
         //initialization
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -71,6 +78,13 @@ public class RoutineActivity extends BaseDataActivity {
         super.onDestroy();
         tts.stop();
         tts.shutdown();
+    }
+
+    private void setupWindowTransitions(){
+        Fade slide = new Fade();
+        slide.setDuration(1000);
+        getWindow().setEnterTransition(slide);
+        getWindow().setExitTransition(slide);
     }
 
     /*Setup up layout manager and adapter for the
@@ -163,9 +177,11 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     public void editModeButtonClicked(View view) {
+        View sharedPlayView = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.button_play);
+        ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(RoutineActivity.this,sharedPlayView, getString(R.string.transition_button_play));
+
         Intent openEditMode = new Intent(RoutineActivity.this, EditModeActivity.class);
         openEditMode.putExtra(KeyConstants.NAME, exerciseName);
-        startActivity(openEditMode);
-        finish();
+        startActivity(openEditMode, transitionActivityOptions.toBundle());
     }
 }
