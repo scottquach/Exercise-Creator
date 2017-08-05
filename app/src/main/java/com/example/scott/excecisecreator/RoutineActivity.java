@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Explode;
@@ -177,7 +178,7 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     public void editModeButtonClicked(View view) {
-        View sharedPlayView = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.button_play);
+        View sharedPlayView = (FloatingActionButton) findViewById(R.id.button_play);
         ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(RoutineActivity.this,sharedPlayView, getString(R.string.transition_button_play));
 
         Intent openEditMode = new Intent(RoutineActivity.this, EditModeActivity.class);

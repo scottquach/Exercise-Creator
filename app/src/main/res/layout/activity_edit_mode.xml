@@ -25,43 +25,49 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.03" />
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/button_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="startExerciseButtonClicked"
-            app:fab_icon="@drawable/ic_play_arrow"
+            android:src="@drawable/ic_play_arrow"
+            app:rippleColor="@color/primary_dark"
             android:transitionName="@string/transition_button_play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp" />
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             app:fab_labelStyle="@id/fab_label"
+            app:fab_addButtonColorNormal="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
-            <com.getbase.floatingactionbutton.AddFloatingActionButton
+            <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/button_add_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="createTaskClicked"
+                app:fab_icon="@drawable/ic_task"
                 app:fab_size="mini"
                 app:fab_title="Create Task" />
 
-            <com.getbase.floatingactionbutton.AddFloatingActionButton
+            <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/button_add_break"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="createBreakClicked"
+                app:fab_icon="@drawable/ic_break"
                 app:fab_size="mini"
                 app:fab_title="Add Break" />
 
-            <com.getbase.floatingactionbutton.AddFloatingActionButton
+            <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/button_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

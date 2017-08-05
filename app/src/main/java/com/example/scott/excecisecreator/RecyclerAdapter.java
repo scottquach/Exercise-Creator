@@ -32,15 +32,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.context = context;
     }
 
-
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_item,
                 parent, false);
 
-        ViewHolder vh = new ViewHolder(view);
-
-        return vh;
+        return new ViewHolder(view);
     }
 
     @Override
