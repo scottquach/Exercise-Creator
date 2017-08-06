@@ -121,7 +121,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void deleteExercise(String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE TABLE IF EXISTS " + tableName);
+        db.execSQL("DROP TABLE IF EXISTS " + tableName);
         db.delete(MasterTable.TABLE_NAME, MasterTable.COLUMN_CONDENSED_NAME + "=?", new String[]{tableName});
         Timber.d("table " + tableName + " deleted");
     }

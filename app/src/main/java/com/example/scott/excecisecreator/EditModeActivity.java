@@ -1,10 +1,13 @@
 package com.example.scott.excecisecreator;
 
 import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.scott.excecisecreator.database.KeyConstants;
 import com.example.scott.excecisecreator.databinding.ActivityEditModeBinding;
+import com.example.scott.excecisecreator.fragments.AlertDialogFragment;
 import com.example.scott.excecisecreator.fragments.BreakDialogFragment;
 import com.example.scott.excecisecreator.fragments.TaskDialogFragment;
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ import timber.log.Timber;
 
 
 public class EditModeActivity extends BaseDataActivity implements BreakDialogFragment.BreakDialogListener,
-        TaskDialogFragment.TaskDialogListener{
+        TaskDialogFragment.TaskDialogListener, AlertDialogFragment.AlertDialogInterface{
 
     private String exerciseName;
 
@@ -71,7 +75,7 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     @Override
     protected void onPause() {
         super.onPause();
-        saveData();
+//        saveData();
     }
 
     private void setUpWindowTransitions(){
@@ -93,8 +97,9 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 
+
                 // TODO: 8/5/2017 actually return if successful
-                return true;
+                return false;
             }
 
             @Override
@@ -179,6 +184,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     }
 
     public void startExerciseButtonClicked(View view) {
+        saveData();
+
         ActivityOptions transitionActivityOptions = ActivityOptions
                 .makeSceneTransitionAnimation(EditModeActivity.this, binding.buttonPlay, getString(R.string.transition_button_play));
 
@@ -188,8 +195,7 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     }
 
     public void deleteButtonClicked(View view) {
-        dbHelper.deleteExercise(exerciseName);
-        finish();
+        AlertDialogFragment.newInstance("Delete Table", "Are you sure?", "Delete", "Cancel").show(getFragmentManager(), "alert_dialog");
     }
 
     @Override
@@ -211,4 +217,15 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     }
 
 
+    @Override
+    public void onPositive() {
+        dbHelper.deleteExercise(exerciseName);
+        startActivity(new Intent(this, StartMenuActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onNegative(DialogInterface dialogInterface) {
+        dialogInterface.dismiss();
+    }
 }
