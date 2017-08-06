@@ -44,6 +44,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(MasterTable.COLUMN_CONDENSED_NAME, condensedName);
         values.put(MasterTable.COLUMN_FULL_NAME, fullName);
+        Timber.d("full name is" + fullName + " condensed name is " + condensedName);
         if (db.insert(MasterTable.TABLE_NAME, null, values) == -1) {
             Timber.e("Error creating new routine reference");
         } else Timber.d("new routine saved");
@@ -79,8 +80,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public String getFullRoutineName(String condensedName) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(MasterTable.TABLE_NAME, new String[]{MasterTable.COLUMN_FULL_NAME},
-                MasterTable.COLUMN_CONDENSED_NAME + "=" + condensedName, null, null, null, null);
+        Cursor cursor = db.query(MasterTable.TABLE_NAME, new String[]{MasterTable.COLUMN_FULL_NAME}, MasterTable.COLUMN_CONDENSED_NAME + "=?",
+                new String[]{condensedName}, null, null, null);
 
         String fullName = "";
         if (cursor.moveToFirst()) {

@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -43,13 +44,13 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
 
         setUpWindowTransitions();
 
-        //Get exercise name to be edited
+        //Get name of exercise to be edited
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             Timber.d("extras were not null");
-            exerciseName = extras.getString(KeyConstants.NAME);
-            if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName + " " + getString(R.string.edit_mode));
-            exerciseName = exerciseName.replaceAll("\\s+", "");
+            exerciseName = extras.getString(KeyConstants.NAME).replaceAll("\\s+", "");
+            if (getSupportActionBar() != null) getSupportActionBar()
+                    .setTitle(dbHelper.getFullRoutineName(exerciseName) + " " + getString(R.string.edit_mode));
 
             loadData();
             setUpRecycleView();
@@ -86,10 +87,43 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
 
         adapter = new RecyclerAdapter(entries, this);
         binding.recycleViewEditMode.setAdapter(adapter);
+
+        ItemTouchHelper.SimpleCallback recyclerEditCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP|ItemTouchHelper.DOWN,
+                ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+                // TODO: 8/5/2017 actually return if successful
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                deleteRecyclerRow(viewHolder.getAdapterPosition());
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(recyclerEditCallback);
+        itemTouchHelper.attachToRecyclerView(binding.recycleViewEditMode);
     }
 
     private void updateRecycleView(){
         adapter.notifyDataSetChanged();
+    }
+
+    private void deleteRecyclerRow(int row){
+        if (entryType.get(row).equals(KeyConstants.BREAK)){
+            entries.remove(row);
+            breakValues.remove(row);
+        } else {
+            entries.remove(row);
+        }
+        entryType.remove(row);
+        Timber.d("Recycler row removed");
+        updateRecycleView();
+    }
+
+    private void editRecyclerRow(){
+
     }
 
     /*Retrieves the specified exercises data from the db and

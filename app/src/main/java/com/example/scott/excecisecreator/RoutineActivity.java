@@ -61,9 +61,9 @@ public class RoutineActivity extends BaseDataActivity {
         //get exercise name to load
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
-            exerciseName = bundle.getString("name");
-            if (getSupportActionBar() != null) getSupportActionBar().setTitle(exerciseName);
-            exerciseName = exerciseName.replaceAll("\\s+", "");
+            exerciseName = bundle.getString("name").replaceAll("\\s+", "");
+            if (getSupportActionBar() != null) getSupportActionBar()
+                    .setTitle(dbHelper.getFullRoutineName(exerciseName));
 
             loadData();
             setUpRecycleView();
