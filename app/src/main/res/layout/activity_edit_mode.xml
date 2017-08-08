@@ -1,9 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.scott.excecisecreator.EditModeActivity">
+<layout>
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
+        tools:context="com.example.scott.excecisecreator.EditModeActivity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_view_edit_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.03" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/button_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="startExerciseButtonClicked"
+            android:src="@drawable/ic_play_arrow"
+            app:rippleColor="@color/primary_dark"
+            android:transitionName="@string/transition_button_play"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp" />
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            app:fab_labelStyle="@id/fab_label"
+            app:fab_addButtonColorNormal="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_add_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="createTaskClicked"
+                app:fab_icon="@drawable/ic_task"
+                app:fab_size="mini"
+                app:fab_title="Create Task" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_add_break"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="createBreakClicked"
+                app:fab_icon="@drawable/ic_break"
+                app:fab_size="mini"
+                app:fab_title="Add Break" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="deleteButtonClicked"
+                app:fab_icon="@drawable/ic_delete"
+                app:fab_size="mini"
+                app:fab_title="Delete" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
