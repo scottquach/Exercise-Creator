@@ -18,4 +18,5 @@
     <string name="create_break">Create Break</string>
     <string name="add">Add</string>
     <string name="transition_button_play">transition_button_play</string>
+    <string name="home">Home</string>
 </resources>
