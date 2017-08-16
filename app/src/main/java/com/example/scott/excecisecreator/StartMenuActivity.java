@@ -7,6 +7,9 @@ import android.support.constraint.ConstraintSet;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -60,9 +63,30 @@ public class StartMenuActivity extends BaseDataActivity {
         originalConstraint.clone(menuLayout);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_action_settings:
+
+                break;
+
+            case R.id.menu_action_about:
+
+                break;
+        }
+        return true;
+    }
+
     /*Returns an ArrayLists of the names of
-    saved exercises
-     */
+            saved exercises
+             */
     private ArrayList<String> loadExerciseNames() {
         ArrayList<String> names = new ArrayList<String>();
         Cursor dataCursor = dbHelper.getExerciseNames();

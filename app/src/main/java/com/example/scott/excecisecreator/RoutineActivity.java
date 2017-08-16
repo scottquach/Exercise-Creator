@@ -3,14 +3,13 @@ package com.example.scott.excecisecreator;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Explode;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.scott.excecisecreator.database.KeyConstants;
+import com.example.scott.excecisecreator.databinding.ActivityExerciseBinding;
 import com.pacific.timer.Rx2Timer;
 
 import java.util.ArrayList;
@@ -43,11 +43,12 @@ public class RoutineActivity extends BaseDataActivity {
     private int step = 0;
     private int exerciseSize = 0;
 
+    ActivityExerciseBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercise);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_exercise);
 
         setupWindowTransitions();
 
@@ -55,7 +56,7 @@ public class RoutineActivity extends BaseDataActivity {
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
+                if (status == TextToSpeech.SUCCESS) {
                     tts.setLanguage(Locale.US);
                 }
             }
@@ -63,14 +64,14 @@ public class RoutineActivity extends BaseDataActivity {
 
         //get exercise name to load
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             exerciseName = bundle.getString("name").replaceAll("\\s+", "");
             if (getSupportActionBar() != null) getSupportActionBar()
                     .setTitle(dbHelper.getFullRoutineName(exerciseName));
 
             loadData();
             setUpRecycleView();
-        }else{
+        } else {
             Toast.makeText(this, R.string.error_loading_routine, Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(RoutineActivity.this, StartMenuActivity.class);
             startActivity(exitToHome);
@@ -78,8 +79,8 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         tts.stop();
         tts.shutdown();
     }
@@ -87,21 +88,21 @@ public class RoutineActivity extends BaseDataActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_action_buttons, menu);
+        inflater.inflate(R.menu.menu_home, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_home:
+        switch (item.getItemId()) {
+            case R.id.menu_action_home:
                 startActivity(new Intent(this, StartMenuActivity.class));
                 break;
         }
         return true;
     }
 
-    private void setupWindowTransitions(){
+    private void setupWindowTransitions() {
         Fade slide = new Fade();
         slide.setDuration(1000);
         getWindow().setEnterTransition(slide);
@@ -145,14 +146,23 @@ public class RoutineActivity extends BaseDataActivity {
                 breakValues.add(dataCursor.getInt(2));
                 entryType.add(type);
 
-                Timber.d("Entry: " + entry + " dataValue: " + dataValue +" Type: " + entryType);
+                Timber.d("Entry: " + entry + " dataValue: " + dataValue + " Type: " + entryType);
             } while (dataCursor.moveToNext());
         }
 
         exerciseSize = entries.size();
     }
 
+    private void updateProgressIndicators() {
+        if (step != 0) {
+            binding.recycleViewRoutines.findViewHolderForAdapterPosition(step - 1).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+        }
+        binding.recycleViewRoutines.findViewHolderForAdapterPosition(step).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.divider));
+    }
+
     private void determineNextStep() {
+        updateProgressIndicators();
+
         if (step < exerciseSize) {
             if (entryType.get(step) == 0) {
                 Timber.d("current type is 0");
@@ -174,8 +184,8 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     private void playTask(String task) {
-        step++;
         tts.speak(task, TextToSpeech.QUEUE_ADD, null);
+        step++;
         determineNextStep();
     }
 
@@ -199,7 +209,7 @@ public class RoutineActivity extends BaseDataActivity {
 
     public void editModeButtonClicked(View view) {
         View sharedPlayView = (FloatingActionButton) findViewById(R.id.button_play);
-        ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(RoutineActivity.this,sharedPlayView, getString(R.string.transition_button_play));
+        ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(RoutineActivity.this, sharedPlayView, getString(R.string.transition_button_play));
 
         Intent openEditMode = new Intent(RoutineActivity.this, EditModeActivity.class);
         openEditMode.putExtra(KeyConstants.NAME, exerciseName);

@@ -6,14 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.Explode;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -84,14 +80,14 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_action_buttons, menu);
+        inflater.inflate(R.menu.menu_home, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_home:
+            case R.id.menu_action_home:
                 saveData();
                 startActivity(new Intent(this, StartMenuActivity.class));
                 break;
@@ -179,7 +175,6 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     the db
      */
     private void saveData(){
-
         dbHelper.saveRoutineEdits(exerciseName, entries, breakValues, entryType);
     }
 
