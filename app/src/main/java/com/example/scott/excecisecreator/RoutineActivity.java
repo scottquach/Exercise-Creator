@@ -28,8 +28,6 @@ import timber.log.Timber;
 
 public class RoutineActivity extends BaseDataActivity {
 
-    @BindView(R.id.recycle_view_routines)
-    RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
     private String exerciseName;
@@ -42,6 +40,11 @@ public class RoutineActivity extends BaseDataActivity {
 
     private int step = 0;
     private int exerciseSize = 0;
+
+    private int playButtonActionToggle = 0;
+    private final static int BUTTON_TOGGLE_PLAY = 0;
+    private final static int BUTTON_TOGGLE_PAUSE = 1;
+    private final static int BUTTON_TOGGLE_RESET = 3;
 
     ActivityExerciseBinding binding;
 
@@ -69,13 +72,19 @@ public class RoutineActivity extends BaseDataActivity {
             if (getSupportActionBar() != null) getSupportActionBar()
                     .setTitle(dbHelper.getFullRoutineName(exerciseName));
 
-            loadData();
-            setUpRecycleView();
+
         } else {
             Toast.makeText(this, R.string.error_loading_routine, Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(RoutineActivity.this, StartMenuActivity.class);
             startActivity(exitToHome);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+        setUpRecycleView();
     }
 
     @Override
@@ -109,25 +118,28 @@ public class RoutineActivity extends BaseDataActivity {
         getWindow().setExitTransition(slide);
     }
 
-    /*Setup up layout manager and adapter for the
-        recycle view, uses the data set entries ArrayList
-         */
+    /**
+     * Setup up layout manager and adapter for the
+     * recycle view, uses the data set entries ArrayList
+     */
     private void setUpRecycleView() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        binding.recycleViewRoutines.setLayoutManager(layoutManager);
         adapter = new RecyclerAdapter(entries, this);
-        recyclerView.setAdapter(adapter);
+        binding.recycleViewRoutines.setAdapter(adapter);
     }
 
-    /*Notifies the adapter to update
-    the recycleview with the edited content
+    /**
+     * Notifies the adapter to update
+     * the recycleview with the edited content
      */
     private void updateRecyclerView() {
         adapter.notifyDataSetChanged();
     }
 
-    /*fill the ArrayLists entries and entryType with the appropriate
-    values from the db table named exerciseName
+    /**
+     * fill the ArrayLists entries and entryType with the appropriate
+     * values from the db table named exerciseName
      */
     private void loadData() {
         Cursor dataCursor = dbHelper.getExercise(exerciseName);
@@ -149,21 +161,20 @@ public class RoutineActivity extends BaseDataActivity {
                 Timber.d("Entry: " + entry + " dataValue: " + dataValue + " Type: " + entryType);
             } while (dataCursor.moveToNext());
         }
-
         exerciseSize = entries.size();
     }
 
     private void updateProgressIndicators() {
         if (step != 0) {
-            binding.recycleViewRoutines.findViewHolderForAdapterPosition(step - 1).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+            binding.recycleViewRoutines.findViewHolderForAdapterPosition(step - 1).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.primary_light));
         }
         binding.recycleViewRoutines.findViewHolderForAdapterPosition(step).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.divider));
     }
 
     private void determineNextStep() {
-        updateProgressIndicators();
 
         if (step < exerciseSize) {
+            updateProgressIndicators();
             if (entryType.get(step) == 0) {
                 Timber.d("current type is 0");
                 playTask(entries.get(step));
@@ -172,8 +183,9 @@ public class RoutineActivity extends BaseDataActivity {
                 startBreak(Integer.valueOf(breakValues.get(step)));
             }
         } else {
-            step = 0;
-            Timber.d("Step reset to zero");
+            //Called when the routine has been complete
+            playButtonActionToggle = BUTTON_TOGGLE_RESET;
+            binding.buttonPlay.setImageResource(R.drawable.ic_reset);
         }
 
     }
@@ -203,8 +215,38 @@ public class RoutineActivity extends BaseDataActivity {
         timer.start();
     }
 
+    private void pauseProgress() {
+
+    }
+
+    private void resumeProgress() {
+
+    }
+
+    private void resetProgress() {
+        step = 0;
+        for (int i = 0; i < exerciseSize; i++) {
+            binding.recycleViewRoutines.findViewHolderForAdapterPosition(i).itemView.setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+        }
+    }
+
     public void playButtonClicked(View view) {
-        determineNextStep();
+        switch (playButtonActionToggle) {
+            case BUTTON_TOGGLE_PLAY:
+                playButtonActionToggle = BUTTON_TOGGLE_PAUSE;
+                determineNextStep();
+                break;
+
+            case BUTTON_TOGGLE_PAUSE:
+                playButtonActionToggle = BUTTON_TOGGLE_PLAY;
+                resumeProgress();
+                break;
+
+            case BUTTON_TOGGLE_RESET:
+                playButtonActionToggle = BUTTON_TOGGLE_PLAY;
+                resetProgress();
+                break;
+        }
     }
 
     public void editModeButtonClicked(View view) {

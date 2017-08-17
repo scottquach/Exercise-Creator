@@ -54,9 +54,6 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
             exerciseName = extras.getString(KeyConstants.NAME).replaceAll("\\s+", "");
             if (getSupportActionBar() != null) getSupportActionBar()
                     .setTitle(dbHelper.getFullRoutineName(exerciseName) + " " + getString(R.string.edit_mode));
-
-            loadData();
-            setUpRecycleView();
         }else{
             Toast.makeText(this, getString(R.string.error_loading_routine), Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(EditModeActivity.this, StartMenuActivity.class);
@@ -67,8 +64,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     @Override
     protected void onResume() {
         super.onResume();
-//        loadData();
-//        updateRecycleView();
+        loadData();
+        updateRecycleView();
     }
 
     @Override
