@@ -46,6 +46,8 @@ public class RoutineActivity extends BaseDataActivity {
     private final static int BUTTON_TOGGLE_PAUSE = 1;
     private final static int BUTTON_TOGGLE_RESET = 3;
 
+    Rx2Timer timer;
+
     ActivityExerciseBinding binding;
 
     @Override
@@ -90,6 +92,12 @@ public class RoutineActivity extends BaseDataActivity {
     @Override
     protected void onPause() {
         super.onPause();
+       tts.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         tts.stop();
         tts.shutdown();
     }
@@ -166,9 +174,11 @@ public class RoutineActivity extends BaseDataActivity {
 
     private void updateProgressIndicators() {
         if (step != 0) {
-            binding.recycleViewRoutines.findViewHolderForAdapterPosition(step - 1).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.primary_light));
+            binding.recycleViewRoutines.findViewHolderForAdapterPosition(step - 1).itemView.findViewById(R.id.row_card_view)
+                    .setBackgroundColor(getResources().getColor(R.color.primary_light));
         }
-        binding.recycleViewRoutines.findViewHolderForAdapterPosition(step).itemView.findViewById(R.id.row_card_view).setBackgroundColor(getResources().getColor(R.color.divider));
+        binding.recycleViewRoutines.findViewHolderForAdapterPosition(step).itemView.findViewById(R.id.row_card_view)
+                .setBackgroundColor(getResources().getColor(R.color.divider));
     }
 
     private void determineNextStep() {
@@ -202,7 +212,7 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     private void startBreak(int totalSeconds) {
-        Rx2Timer timer = Rx2Timer.builder()
+        timer = Rx2Timer.builder()
                 .initialDelay(0) //default is 0
                 .period(1) //default is 1
                 .take(totalSeconds) //default is 60
@@ -216,17 +226,18 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     private void pauseProgress() {
-
+        timer.pause();
     }
 
     private void resumeProgress() {
-
+        timer.resume();
     }
 
     private void resetProgress() {
         step = 0;
         for (int i = 0; i < exerciseSize; i++) {
-            binding.recycleViewRoutines.findViewHolderForAdapterPosition(i).itemView.setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+            binding.recycleViewRoutines.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.row_card_view)
+                    .setBackgroundColor(getResources().getColor(R.color.backgroundColor));
         }
     }
 
@@ -234,16 +245,21 @@ public class RoutineActivity extends BaseDataActivity {
         switch (playButtonActionToggle) {
             case BUTTON_TOGGLE_PLAY:
                 playButtonActionToggle = BUTTON_TOGGLE_PAUSE;
-                determineNextStep();
+                binding.buttonPlay.setImageResource(R.drawable.ic_pause);
+                if (timer != null && timer.isPause()) {
+                    resumeProgress();
+                } else determineNextStep();
                 break;
 
             case BUTTON_TOGGLE_PAUSE:
                 playButtonActionToggle = BUTTON_TOGGLE_PLAY;
-                resumeProgress();
+                binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
+                pauseProgress();
                 break;
 
             case BUTTON_TOGGLE_RESET:
                 playButtonActionToggle = BUTTON_TOGGLE_PLAY;
+                binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
                 resetProgress();
                 break;
         }
