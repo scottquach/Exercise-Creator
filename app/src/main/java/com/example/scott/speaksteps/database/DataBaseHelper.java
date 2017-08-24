@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator.database;
+package com.example.scott.speaksteps.database;
 
 import android.content.ContentValues;
 import android.content.Context;

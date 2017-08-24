@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator;
+package com.example.scott.speaksteps;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -6,7 +6,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.os.Bundle;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.scott.excecisecreator.database.KeyConstants;
+import com.example.scott.speaksteps.database.KeyConstants;
 
 import java.util.ArrayList;
 

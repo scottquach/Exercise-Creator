@@ -1,10 +1,10 @@
-package com.example.scott.excecisecreator;
+package com.example.scott.speaksteps;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.scott.excecisecreator.database.DataBaseHelper;
+import com.example.scott.speaksteps.database.DataBaseHelper;
 
 import butterknife.ButterKnife;
 

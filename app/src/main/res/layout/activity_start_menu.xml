@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.scott.excecisecreator.StartMenuActivity"
+    tools:context="com.example.scott.speaksteps.StartMenuActivity"
     android:animateLayoutChanges="true"
     android:id="@+id/layout_start_menu">
 
