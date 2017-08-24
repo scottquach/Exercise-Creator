@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator.fragments;
+package com.example.scott.speaksteps.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.widget.EditText;
 
-import com.example.scott.excecisecreator.R;
+import com.example.scott.speaksteps.R;
 
 /**
  * Created by Scott Quach on 7/15/2017.

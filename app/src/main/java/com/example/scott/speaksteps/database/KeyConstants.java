@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator.database;
+package com.example.scott.speaksteps.database;
 
 /**
  * Created by Scott Quach on 7/28/2017.

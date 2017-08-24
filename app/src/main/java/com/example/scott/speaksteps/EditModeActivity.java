@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator;
+package com.example.scott.speaksteps;
 
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
@@ -16,11 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.scott.excecisecreator.database.KeyConstants;
-import com.example.scott.excecisecreator.databinding.ActivityEditModeBinding;
-import com.example.scott.excecisecreator.fragments.AlertDialogFragment;
-import com.example.scott.excecisecreator.fragments.BreakDialogFragment;
-import com.example.scott.excecisecreator.fragments.TaskDialogFragment;
+import com.example.scott.speaksteps.database.KeyConstants;
+import com.example.scott.speaksteps.databinding.ActivityEditModeBinding;
+import com.example.scott.speaksteps.fragments.AlertDialogFragment;
+import com.example.scott.speaksteps.fragments.BreakDialogFragment;
+import com.example.scott.speaksteps.fragments.TaskDialogFragment;
 import java.util.ArrayList;
 
 import timber.log.Timber;

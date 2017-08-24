@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator;
+package com.example.scott.speaksteps;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

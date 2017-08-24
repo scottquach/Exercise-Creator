@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator;
+package com.example.scott.speaksteps;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -16,14 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.scott.excecisecreator.database.KeyConstants;
-import com.example.scott.excecisecreator.databinding.ActivityExerciseBinding;
+import com.example.scott.speaksteps.database.KeyConstants;
+import com.example.scott.speaksteps.databinding.ActivityExerciseBinding;
 import com.pacific.timer.Rx2Timer;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 public class RoutineActivity extends BaseDataActivity {

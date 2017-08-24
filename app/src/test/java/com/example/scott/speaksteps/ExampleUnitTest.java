@@ -1,4 +1,4 @@
-package com.example.scott.excecisecreator;
+package com.example.scott.speaksteps;
 
 import org.junit.Test;
 
