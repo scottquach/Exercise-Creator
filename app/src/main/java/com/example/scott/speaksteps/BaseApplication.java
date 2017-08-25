@@ -13,6 +13,8 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Timber.plant(new MyDebugTree());
+
+        Instrumentation.getInstance().init(this);
     }
 
     public class MyDebugTree extends Timber.DebugTree {

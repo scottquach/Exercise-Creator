@@ -54,6 +54,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
             exerciseName = extras.getString(KeyConstants.NAME).replaceAll("\\s+", "");
             if (getSupportActionBar() != null) getSupportActionBar()
                     .setTitle(dbHelper.getFullRoutineName(exerciseName) + " " + getString(R.string.edit_mode));
+            loadData();
+            setUpRecycleView();
         }else{
             Toast.makeText(this, getString(R.string.error_loading_routine), Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(EditModeActivity.this, StartMenuActivity.class);
@@ -64,8 +66,6 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
-        updateRecycleView();
     }
 
     @Override
@@ -123,6 +123,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(recyclerEditCallback);
         itemTouchHelper.attachToRecyclerView(binding.recycleViewEditMode);
+
+        updateRecycleView();
     }
 
     private void updateRecycleView(){
@@ -139,6 +141,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         entryType.remove(row);
         Timber.d("Recycler row removed");
         updateRecycleView();
+        Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_ROW_DELETED,
+                Instrumentation.TrackParams.SUCCESS);
     }
 
     private void editRecyclerRow(){
@@ -217,6 +221,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         breakValues.add(0);
         entryType.add(KeyConstants.TASK);
         updateRecycleView();
+        Instrumentation.getInstance().track(Instrumentation.TrackEvents.ADD_TASK,
+            Instrumentation.TrackParams.SUCCESS);
     }
 
     @Override
@@ -227,6 +233,8 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         breakValues.add(totalSeconds);
         entryType.add(KeyConstants.BREAK);
         updateRecycleView();
+        Instrumentation.getInstance().track(Instrumentation.TrackEvents.ADD_BREAK,
+                Instrumentation.TrackParams.SUCCESS);
     }
 
 

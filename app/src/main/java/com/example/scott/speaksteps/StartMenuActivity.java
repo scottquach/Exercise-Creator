@@ -38,18 +38,27 @@ public class StartMenuActivity extends BaseDataActivity {
 
     private boolean loadIsCard, createIsCard = false;
 
-    @BindView(R.id.layout_start_menu) ConstraintLayout menuLayout;
-    @BindView(R.id.container_load_routine) LinearLayout loadContainer;
-    @BindView(R.id.inner_container_load_routine) LinearLayout loadInnerContainer;
-    @BindView(R.id.container_create_routine) LinearLayout createContainer;
-    @BindView(R.id.inner_container_create_routine) LinearLayout createInnerContainer;
+    @BindView(R.id.layout_start_menu)
+    ConstraintLayout menuLayout;
+    @BindView(R.id.container_load_routine)
+    LinearLayout loadContainer;
+    @BindView(R.id.inner_container_load_routine)
+    LinearLayout loadInnerContainer;
+    @BindView(R.id.container_create_routine)
+    LinearLayout createContainer;
+    @BindView(R.id.inner_container_create_routine)
+    LinearLayout createInnerContainer;
 
 
-    @BindView(R.id.text_set_name) TextView nameEditT;
-    @BindView(R.id.button_create) Button createButton;
-    @BindView(R.id.button_load) Button loadButton;
+    @BindView(R.id.text_set_name)
+    TextView nameEditT;
+    @BindView(R.id.button_create)
+    Button createButton;
+    @BindView(R.id.button_load)
+    Button loadButton;
 
-    @BindView(R.id.list_view_routines) ListView exercisesListView;
+    @BindView(R.id.list_view_routines)
+    ListView exercisesListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +80,15 @@ public class StartMenuActivity extends BaseDataActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_action_settings:
-
+                Instrumentation.getInstance().track(Instrumentation.TrackEvents.OPEN_SETTINGS,
+                        Instrumentation.TrackParams.SUCCESS);
                 break;
 
             case R.id.menu_action_about:
-
+                Instrumentation.getInstance().track(Instrumentation.TrackEvents.OPEN_ABOUT,
+                        Instrumentation.TrackParams.SUCCESS);
                 break;
         }
         return true;
@@ -265,6 +276,4 @@ public class StartMenuActivity extends BaseDataActivity {
         createIsCard = false;
         resetCreateCard();
     }
-
-
 }

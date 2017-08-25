@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.scott.speaksteps.Instrumentation;
+
 import java.util.ArrayList;
 
 import timber.log.Timber;
@@ -50,6 +52,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else Timber.d("new routine saved");
 
         db.execSQL(RoutineTable.createTable(condensedName));
+        Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_CREATED,
+                Instrumentation.TrackParams.SUCCESS);
     }
 
     //ToDo Delete/Clear table and update Master TAble for names
@@ -124,6 +128,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tableName);
         db.delete(MasterTable.TABLE_NAME, MasterTable.COLUMN_CONDENSED_NAME + "=?", new String[]{tableName});
         Timber.d("table " + tableName + " deleted");
+        Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_DELETED,
+                Instrumentation.TrackParams.SUCCESS);
     }
 
 }
