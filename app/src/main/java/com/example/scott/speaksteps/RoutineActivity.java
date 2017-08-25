@@ -72,8 +72,8 @@ public class RoutineActivity extends BaseDataActivity {
             exerciseName = bundle.getString("name").replaceAll("\\s+", "");
             if (getSupportActionBar() != null) getSupportActionBar()
                     .setTitle(dbHelper.getFullRoutineName(exerciseName));
-
-
+            loadData();
+            setUpRecycleView();
         } else {
             Toast.makeText(this, R.string.error_loading_routine, Toast.LENGTH_SHORT).show();
             Intent exitToHome = new Intent(RoutineActivity.this, StartMenuActivity.class);
@@ -84,8 +84,7 @@ public class RoutineActivity extends BaseDataActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
-        setUpRecycleView();
+
     }
 
     @Override
@@ -248,18 +247,24 @@ public class RoutineActivity extends BaseDataActivity {
                 if (timer != null && timer.isPause()) {
                     resumeProgress();
                 } else determineNextStep();
+                Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_PLAYED,
+                        Instrumentation.TrackParams.SUCCESS);
                 break;
 
             case BUTTON_TOGGLE_PAUSE:
                 playButtonActionToggle = BUTTON_TOGGLE_PLAY;
                 binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
                 pauseProgress();
+                Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_PAUSED,
+                        Instrumentation.TrackParams.SUCCESS);
                 break;
 
             case BUTTON_TOGGLE_RESET:
                 playButtonActionToggle = BUTTON_TOGGLE_PLAY;
                 binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
                 resetProgress();
+                Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_RESET,
+                        Instrumentation.TrackParams.SUCCESS);
                 break;
         }
     }
