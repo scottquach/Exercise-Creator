@@ -20,4 +20,14 @@
     <string name="transition_button_play">transition_button_play</string>
     <string name="home">Home</string>
     <string name="about">About</string>
+    <string name="app_description">Automating and simplifying the routines in your life \n Created by Scott Quach</string>
+    <string name="my_email">scottqglobal@gmail.com</string>
+    <string name="my_github">https://github.com/scottquach</string>
+
+    <string-array name="licenses">
+        <item>https://github.com/thepacific/rx2-timer</item>
+        <item>https://github.com/futuresimple/android-floating-action-button</item>
+        <item>https://github.com/JakeWharton/butterknife</item>
+        <item>https://github.com/JakeWharton/timber</item>
+    </string-array>
 </resources>
