@@ -23,6 +23,8 @@ import com.example.scott.speaksteps.database.KeyConstants;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
 import timber.log.Timber;
 
 /*
@@ -87,6 +89,7 @@ public class StartMenuActivity extends BaseDataActivity {
                 break;
 
             case R.id.menu_action_about:
+                startActivity(new Intent(this, AboutActivity.class));
                 Instrumentation.getInstance().track(Instrumentation.TrackEvents.OPEN_ABOUT,
                         Instrumentation.TrackParams.SUCCESS);
                 break;
@@ -95,8 +98,8 @@ public class StartMenuActivity extends BaseDataActivity {
     }
 
     /*Returns an ArrayLists of the names of
-            saved exercises
-             */
+                saved exercises
+                 */
     private ArrayList<String> loadExerciseNames() {
         ArrayList<String> names = new ArrayList<String>();
         Cursor dataCursor = dbHelper.getExerciseNames();
