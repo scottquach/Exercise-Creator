@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".RoutineActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity android:name=".StartMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,8 @@
             android:name="io.fabric.ApiKey"
             android:value="1b853f43e0aa989369064dd2dc2521ef53522103" />
 
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".AboutActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

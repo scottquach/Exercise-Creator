@@ -84,14 +84,12 @@ public class StartMenuActivity extends BaseDataActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_settings:
-                Instrumentation.getInstance().track(Instrumentation.TrackEvents.OPEN_SETTINGS,
-                        Instrumentation.TrackParams.SUCCESS);
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
             case R.id.menu_action_about:
                 startActivity(new Intent(this, AboutActivity.class));
-                Instrumentation.getInstance().track(Instrumentation.TrackEvents.OPEN_ABOUT,
-                        Instrumentation.TrackParams.SUCCESS);
+
                 break;
         }
         return true;
