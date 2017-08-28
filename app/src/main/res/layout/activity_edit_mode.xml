@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundColor"
+        android:background="@drawable/background_main"
         tools:context="com.example.scott.speaksteps.EditModeActivity">
 
         <android.support.v7.widget.RecyclerView
@@ -31,7 +30,8 @@
             android:layout_height="wrap_content"
             android:onClick="startExerciseButtonClicked"
             android:src="@drawable/ic_play_arrow"
-            app:rippleColor="@color/primary_dark"
+            app:rippleColor="@color/primary_light"
+            android:backgroundTint="@color/primary_dark"
             android:transitionName="@string/transition_button_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -42,10 +42,10 @@
             android:id="@+id/button_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="0dp"
             app:fab_labelStyle="@id/fab_label"
-            app:fab_addButtonColorNormal="@color/colorAccent"
+            app:fab_addButtonColorNormal="@color/primary_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 

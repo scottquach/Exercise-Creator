@@ -4,16 +4,17 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.scott.speaksteps.RoutineActivity"
-    android:background="@color/backgroundColor"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/background_main">
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_play"
         android:src="@drawable/ic_play_arrow"
-        app:rippleColor="@color/primary_dark"
+        app:rippleColor="@color/primary_light"
+        android:backgroundTint="@color/primary_dark"
         android:onClick="playButtonClicked"
         android:transitionName="@string/transition_button_play"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,7 +31,8 @@
         android:layout_marginBottom="16dp"
         android:onClick="editModeButtonClicked"
         android:src="@drawable/ic_edit"
-        app:rippleColor="@color/primary_dark"
+        android:backgroundTint="@color/primary_dark"
+        app:rippleColor="@color/primary_light"
         android:layout_marginEnd="8dp" />
 
     <android.support.v7.widget.RecyclerView
