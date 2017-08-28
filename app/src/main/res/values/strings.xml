@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Speak Steps</string>
+    <string name="app_description">Automating and simplifying the routines in your life \n Created by Scott Quach</string>
+    <string name="app_home_message">Speak the Steps in \n Life </string>
     <string name="action_settings">Settings</string>
     <string name="minutes">Minutes</string>
     <string name="seconds">Seconds</string>
@@ -20,7 +22,6 @@
     <string name="transition_button_play">transition_button_play</string>
     <string name="home">Home</string>
     <string name="about">About</string>
-    <string name="app_description">Automating and simplifying the routines in your life \n Created by Scott Quach</string>
     <string name="my_email">scottqglobal@gmail.com</string>
     <string name="my_github">https://github.com/scottquach</string>
 

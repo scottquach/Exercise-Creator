@@ -2,23 +2,28 @@ package com.example.scott.speaksteps;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.scott.speaksteps.database.KeyConstants;
+import com.example.scott.speaksteps.databinding.ActivityStartMenuBinding;
 
 import java.util.ArrayList;
 
@@ -48,8 +53,6 @@ public class StartMenuActivity extends BaseDataActivity {
     LinearLayout loadInnerContainer;
     @BindView(R.id.container_create_routine)
     LinearLayout createContainer;
-    @BindView(R.id.inner_container_create_routine)
-    LinearLayout createInnerContainer;
 
 
     @BindView(R.id.text_set_name)
@@ -62,10 +65,12 @@ public class StartMenuActivity extends BaseDataActivity {
     @BindView(R.id.list_view_routines)
     ListView exercisesListView;
 
+    ActivityStartMenuBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_menu);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_start_menu);
 
         //initialize
 
@@ -83,9 +88,9 @@ public class StartMenuActivity extends BaseDataActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
+//            case R.id.menu_action_settings:
+//                startActivity(new Intent(this, SettingsActivity.class));
+//                break;
 
             case R.id.menu_action_about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -144,7 +149,7 @@ public class StartMenuActivity extends BaseDataActivity {
         TransitionManager.beginDelayedTransition(menuLayout);
 
         applyConstraintSet.centerVertically(R.id.card_load_routine, R.id.layout_start_menu);
-        applyConstraintSet.setMargin(R.id.card_load_routine, ConstraintSet.TOP, 0);
+        applyConstraintSet.centerHorizontally(R.id.card_load_routine, R.id.layout_start_menu);
 
         for (int i = 0; i < loadContainer.getChildCount(); i++) {
             loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
@@ -185,13 +190,11 @@ public class StartMenuActivity extends BaseDataActivity {
         TransitionManager.beginDelayedTransition(menuLayout);
 
         applyConstraintSet.centerVertically(R.id.card_create_route, R.id.layout_start_menu);
-        applyConstraintSet.setMargin(R.id.card_create_route, ConstraintSet.BOTTOM, 0);
+        applyConstraintSet.centerHorizontally(R.id.card_create_route, R.id.layout_start_menu);
+
 
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.VISIBLE);
-        }
-        for (int i = 0; i < createInnerContainer.getChildCount(); i++) {
-            createInnerContainer.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
         applyConstraintSet.applyTo(menuLayout);
@@ -206,10 +209,6 @@ public class StartMenuActivity extends BaseDataActivity {
         for (int i = 0; i < createContainer.getChildCount(); i++) {
             createContainer.getChildAt(i).setVisibility(View.GONE);
         }
-        for (int i = 0; i < createInnerContainer.getChildCount(); i++) {
-            createInnerContainer.getChildAt(i).setVisibility(View.GONE);
-        }
-        createInnerContainer.setVisibility(View.VISIBLE);
         createButton.setVisibility(View.VISIBLE);
 
         originalConstraint.applyTo(menuLayout);

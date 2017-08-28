@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.scott.speaksteps.database.KeyConstants;
-import com.example.scott.speaksteps.databinding.ActivityExerciseBinding;
+import com.example.scott.speaksteps.databinding.ActivityRoutineBinding;
 import com.pacific.timer.Rx2Timer;
 
 import java.util.ArrayList;
@@ -47,12 +47,12 @@ public class RoutineActivity extends BaseDataActivity {
 
     Rx2Timer timer;
 
-    ActivityExerciseBinding binding;
+    ActivityRoutineBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_exercise);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_routine);
 
         setupWindowTransitions();
 
@@ -176,7 +176,7 @@ public class RoutineActivity extends BaseDataActivity {
                     .setBackgroundColor(getResources().getColor(R.color.primary_light));
         }
         binding.recycleViewRoutines.findViewHolderForAdapterPosition(step).itemView.findViewById(R.id.row_card_view)
-                .setBackgroundColor(getResources().getColor(R.color.divider));
+                .setBackgroundColor(getResources().getColor(R.color.grey));
     }
 
     private void determineNextStep() {
