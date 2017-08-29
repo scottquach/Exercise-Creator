@@ -28,7 +28,6 @@
     <string-array name="licenses">
         <item>https://github.com/thepacific/rx2-timer</item>
         <item>https://github.com/futuresimple/android-floating-action-button</item>
-        <item>https://github.com/JakeWharton/butterknife</item>
         <item>https://github.com/JakeWharton/timber</item>
     </string-array>
 </resources>

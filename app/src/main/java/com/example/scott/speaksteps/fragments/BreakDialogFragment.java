@@ -59,7 +59,7 @@ public class BreakDialogFragment extends DialogFragment{
         final NumberPicker secondNP = (NumberPicker) view.findViewById(R.id.picker_second);
         minuteNP.setMinValue(0);
         minuteNP.setMaxValue(60);
-        secondNP.setMinValue(1);
+        secondNP.setMinValue(0);
         secondNP.setMaxValue(59);
 
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
