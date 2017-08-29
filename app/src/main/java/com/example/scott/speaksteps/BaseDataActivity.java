@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.scott.speaksteps.database.DataBaseHelper;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by Scott Quach on 7/26/2017.
  */
@@ -31,6 +29,5 @@ public class BaseDataActivity extends AppCompatActivity{
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        ButterKnife.bind(this);
     }
 }

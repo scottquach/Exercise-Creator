@@ -3,10 +3,8 @@ package com.example.scott.speaksteps;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,21 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.scott.speaksteps.database.KeyConstants;
 import com.example.scott.speaksteps.databinding.ActivityStartMenuBinding;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import mehdi.sakout.aboutpage.AboutPage;
-import mehdi.sakout.aboutpage.Element;
 import timber.log.Timber;
 
 /*
@@ -45,26 +33,6 @@ public class StartMenuActivity extends BaseDataActivity {
 
     private boolean loadIsCard, createIsCard = false;
 
-    @BindView(R.id.layout_start_menu)
-    ConstraintLayout menuLayout;
-    @BindView(R.id.container_load_routine)
-    LinearLayout loadContainer;
-    @BindView(R.id.inner_container_load_routine)
-    LinearLayout loadInnerContainer;
-    @BindView(R.id.container_create_routine)
-    LinearLayout createContainer;
-
-
-    @BindView(R.id.text_set_name)
-    TextView nameEditT;
-    @BindView(R.id.button_create)
-    Button createButton;
-    @BindView(R.id.button_load)
-    Button loadButton;
-
-    @BindView(R.id.list_view_routines)
-    ListView exercisesListView;
-
     ActivityStartMenuBinding binding;
 
     @Override
@@ -74,8 +42,8 @@ public class StartMenuActivity extends BaseDataActivity {
 
         //initialize
 
-        applyConstraintSet.clone(menuLayout);
-        originalConstraint.clone(menuLayout);
+        applyConstraintSet.clone(binding.layoutStartMenu);
+        originalConstraint.clone(binding.layoutStartMenu);
     }
 
     @Override
@@ -129,9 +97,9 @@ public class StartMenuActivity extends BaseDataActivity {
     private void loadListView() {
         final ArrayList<String> names = loadExerciseNames();
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.listview_simple_row, names);
-        exercisesListView.setAdapter(adapter);
+        binding.listViewRoutines.setAdapter(adapter);
 
-        exercisesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        binding.listViewRoutines.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String exerciseName = names.get(position);
@@ -146,20 +114,20 @@ public class StartMenuActivity extends BaseDataActivity {
     an exercise
      */
     private void loadCardAnim() {
-        TransitionManager.beginDelayedTransition(menuLayout);
+        TransitionManager.beginDelayedTransition(binding.layoutStartMenu);
 
         applyConstraintSet.centerVertically(R.id.card_load_routine, R.id.layout_start_menu);
         applyConstraintSet.centerHorizontally(R.id.card_load_routine, R.id.layout_start_menu);
 
-        for (int i = 0; i < loadContainer.getChildCount(); i++) {
-            loadContainer.getChildAt(i).setVisibility(View.VISIBLE);
+        for (int i = 0; i < binding.containerLoadRoutine.getChildCount(); i++) {
+            binding.containerLoadRoutine.getChildAt(i).setVisibility(View.VISIBLE);
         }
-        for (int i = 0; i < loadInnerContainer.getChildCount(); i++) {
-            loadInnerContainer.getChildAt(i).setVisibility(View.VISIBLE);
+        for (int i = 0; i < binding.innerContainerLoadRoutine.getChildCount(); i++) {
+            binding.innerContainerLoadRoutine.getChildAt(i).setVisibility(View.VISIBLE);
         }
-        loadButton.setVisibility(View.GONE);
+        binding.buttonLoad.setVisibility(View.GONE);
 
-        applyConstraintSet.applyTo(menuLayout);
+        applyConstraintSet.applyTo(binding.layoutStartMenu);
         loadListView();
     }
 
@@ -167,19 +135,19 @@ public class StartMenuActivity extends BaseDataActivity {
     load card from it's animated position
      */
     private void resetLoadCard() {
-        TransitionManager.beginDelayedTransition(menuLayout);
+        TransitionManager.beginDelayedTransition(binding.layoutStartMenu);
 
-        for (int i = 0; i < loadContainer.getChildCount(); i++) {
-            loadContainer.getChildAt(i).setVisibility(View.GONE);
+        for (int i = 0; i < binding.containerLoadRoutine.getChildCount(); i++) {
+            binding.containerLoadRoutine.getChildAt(i).setVisibility(View.GONE);
         }
 
-        for (int i = 0; i < loadInnerContainer.getChildCount(); i++) {
-            loadInnerContainer.getChildAt(i).setVisibility(View.GONE);
+        for (int i = 0; i < binding.innerContainerLoadRoutine.getChildCount(); i++) {
+            binding.innerContainerLoadRoutine.getChildAt(i).setVisibility(View.GONE);
         }
-        loadInnerContainer.setVisibility(View.VISIBLE);
-        loadButton.setVisibility(View.VISIBLE);
+        binding.innerContainerLoadRoutine.setVisibility(View.VISIBLE);
+        binding.buttonLoad.setVisibility(View.VISIBLE);
 
-        originalConstraint.applyTo(menuLayout);
+        originalConstraint.applyTo(binding.layoutStartMenu);
         applyConstraintSet.clone(originalConstraint);
     }
 
@@ -187,31 +155,31 @@ public class StartMenuActivity extends BaseDataActivity {
     a new exercise
      */
     private void createCardAnim() {
-        TransitionManager.beginDelayedTransition(menuLayout);
+        TransitionManager.beginDelayedTransition(binding.layoutStartMenu);
 
         applyConstraintSet.centerVertically(R.id.card_create_route, R.id.layout_start_menu);
         applyConstraintSet.centerHorizontally(R.id.card_create_route, R.id.layout_start_menu);
 
 
-        for (int i = 0; i < createContainer.getChildCount(); i++) {
-            createContainer.getChildAt(i).setVisibility(View.VISIBLE);
+        for (int i = 0; i < binding.containerCreateRoutine.getChildCount(); i++) {
+            binding.containerCreateRoutine.getChildAt(i).setVisibility(View.VISIBLE);
         }
 
-        applyConstraintSet.applyTo(menuLayout);
+        applyConstraintSet.applyTo(binding.layoutStartMenu);
     }
 
     /*Resets the position of the
     create card from it's animated position
      */
     private void resetCreateCard() {
-        TransitionManager.beginDelayedTransition(menuLayout);
+        TransitionManager.beginDelayedTransition(binding.layoutStartMenu);
 
-        for (int i = 0; i < createContainer.getChildCount(); i++) {
-            createContainer.getChildAt(i).setVisibility(View.GONE);
+        for (int i = 0; i < binding.containerCreateRoutine.getChildCount(); i++) {
+            binding.containerCreateRoutine.getChildAt(i).setVisibility(View.GONE);
         }
-        createButton.setVisibility(View.VISIBLE);
+        binding.buttonCreate.setVisibility(View.VISIBLE);
 
-        originalConstraint.applyTo(menuLayout);
+        originalConstraint.applyTo(binding.layoutStartMenu);
         applyConstraintSet.clone(originalConstraint);
     }
 
@@ -232,9 +200,9 @@ public class StartMenuActivity extends BaseDataActivity {
      */
     public void createButtonClicked(View view) {
         if (createIsCard) {
-            String newName = nameEditT.getText().toString().trim();
+            String newName = binding.textSetName.getText().toString().trim();
             if (newName.equals("")) {
-                nameEditT.setError(getString(R.string.blank_field));
+                binding.textSetName.setError(getString(R.string.blank_field));
             } else {
                 boolean doesExist = false;
                 ArrayList<String> currentNames = loadExerciseNames();
@@ -253,7 +221,7 @@ public class StartMenuActivity extends BaseDataActivity {
                     createExercise.putExtra(KeyConstants.NAME, newName);
                     startActivity(createExercise);
                 } else {
-                    nameEditT.setError(getString(R.string.name_already_exists));
+                    binding.textSetName.setError(getString(R.string.name_already_exists));
                 }
             }
 
