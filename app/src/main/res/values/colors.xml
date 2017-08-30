@@ -11,5 +11,6 @@
     <color name="white">#ffffff</color>
     <color name="divider">#BDBDBD</color>
     <color name="grey">#6d7277</color>
+    <color name="grey_white">#D4D4E3 </color>
 
 </resources>

@@ -14,7 +14,7 @@
         android:id="@+id/button_play"
         android:src="@drawable/ic_play_arrow"
         app:rippleColor="@color/primary_light"
-        android:backgroundTint="@color/primary_dark"
+        android:backgroundTint="@color/white"
         android:onClick="playButtonClicked"
         android:transitionName="@string/transition_button_play"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,7 +31,7 @@
         android:layout_marginBottom="16dp"
         android:onClick="editModeButtonClicked"
         android:src="@drawable/ic_edit"
-        android:backgroundTint="@color/primary_dark"
+        android:backgroundTint="@color/white"
         app:rippleColor="@color/primary_light"
         android:layout_marginEnd="8dp" />
 

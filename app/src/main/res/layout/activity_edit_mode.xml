@@ -31,7 +31,7 @@
             android:onClick="startExerciseButtonClicked"
             android:src="@drawable/ic_play_arrow"
             app:rippleColor="@color/primary_light"
-            android:backgroundTint="@color/primary_dark"
+            android:backgroundTint="@color/white"
             android:transitionName="@string/transition_button_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -45,7 +45,9 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="0dp"
             app:fab_labelStyle="@id/fab_label"
-            app:fab_addButtonColorNormal="@color/primary_dark"
+            app:fab_addButtonColorNormal="@color/white"
+            app:fab_addButtonColorPressed="@color/primary_light"
+            app:fab_addButtonPlusIconColor="@color/primary_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
@@ -55,6 +57,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="createTaskClicked"
                 app:fab_icon="@drawable/ic_task"
+                app:fab_colorPressed="@color/primary_light"
+                app:fab_colorNormal="@color/white"
                 app:fab_size="mini"
                 app:fab_title="Create Task" />
 
@@ -64,6 +68,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="createBreakClicked"
                 app:fab_icon="@drawable/ic_break"
+                app:fab_colorPressed="@color/primary_light"
+                app:fab_colorNormal="@color/white"
                 app:fab_size="mini"
                 app:fab_title="Add Break" />
 
@@ -72,6 +78,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="deleteButtonClicked"
+                app:fab_colorPressed="@color/primary_light"
+                app:fab_colorNormal="@color/white"
                 app:fab_icon="@drawable/ic_delete"
                 app:fab_size="mini"
                 app:fab_title="Delete" />
