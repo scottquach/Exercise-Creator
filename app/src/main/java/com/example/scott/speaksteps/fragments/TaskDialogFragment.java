@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.example.scott.speaksteps.R;
@@ -70,6 +71,9 @@ public class TaskDialogFragment extends DialogFragment {
             }
         });
 
-        return builder.create();
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        return dialog;
     }
 }

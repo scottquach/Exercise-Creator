@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
@@ -18,6 +17,7 @@ import com.example.scott.speaksteps.database.KeyConstants;
 import com.example.scott.speaksteps.databinding.ActivityStartMenuBinding;
 
 import java.util.ArrayList;
+
 import timber.log.Timber;
 
 /*
@@ -69,8 +69,8 @@ public class StartMenuActivity extends BaseDataActivity {
     }
 
     /*Returns an ArrayLists of the names of
-                saved exercises
-                 */
+      saved exercises
+    */
     private ArrayList<String> loadExerciseNames() {
         ArrayList<String> names = new ArrayList<String>();
         Cursor dataCursor = dbHelper.getExerciseNames();
@@ -91,7 +91,7 @@ public class StartMenuActivity extends BaseDataActivity {
         return names;
     }
 
-    /*Loads the listview of saved exercises located in
+    /**Loads the listview of saved exercises located in
     the load CardView
      */
     private void loadListView() {
@@ -110,7 +110,7 @@ public class StartMenuActivity extends BaseDataActivity {
         });
     }
 
-    /*Start morph animation for loading
+    /**Start morph animation for loading
     an exercise
      */
     private void loadCardAnim() {
@@ -131,7 +131,7 @@ public class StartMenuActivity extends BaseDataActivity {
         loadListView();
     }
 
-    /*Resets the position of the
+    /**Resets the position of the
     load card from it's animated position
      */
     private void resetLoadCard() {
@@ -151,7 +151,7 @@ public class StartMenuActivity extends BaseDataActivity {
         applyConstraintSet.clone(originalConstraint);
     }
 
-    /*Start morph animation for creating
+    /**Start morph animation for creating
     a new exercise
      */
     private void createCardAnim() {
@@ -168,7 +168,7 @@ public class StartMenuActivity extends BaseDataActivity {
         applyConstraintSet.applyTo(binding.layoutStartMenu);
     }
 
-    /*Resets the position of the
+    /**Resets the position of the
     create card from it's animated position
      */
     private void resetCreateCard() {
@@ -194,7 +194,7 @@ public class StartMenuActivity extends BaseDataActivity {
         }
     }
 
-    /*Handle the creation of a new sql table for the
+    /**Handle the creation of a new sql table for the
     exercise, passes name to editMode Activity. Checks
     if the new name currently exists or not
      */
@@ -215,11 +215,14 @@ public class StartMenuActivity extends BaseDataActivity {
                 }
 
                 if (!doesExist) {
-                    dbHelper.saveNewRoutine(newName);
-
-                    Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
-                    createExercise.putExtra(KeyConstants.NAME, newName);
-                    startActivity(createExercise);
+                    if (isValidFormat(newName)) {
+                        dbHelper.saveNewRoutine(newName);
+                        Intent createExercise = new Intent(StartMenuActivity.this, EditModeActivity.class);
+                        createExercise.putExtra(KeyConstants.NAME, newName);
+                        startActivity(createExercise);
+                    } else {
+                        binding.textSetName.setError(getString(R.string.name_invalid_format));
+                    }
                 } else {
                     binding.textSetName.setError(getString(R.string.name_already_exists));
                 }
@@ -235,13 +238,16 @@ public class StartMenuActivity extends BaseDataActivity {
         }
     }
 
+    /**
+     * checks if the wanted name of a new table
+     * is of a valid format (no periods, etc.)
+     */
+    private boolean isValidFormat(String name) {
+        return name.matches("^[a-zA-Z0-9_ ]*$") && !Character.isDigit(name.charAt(0));
+    }
+
     public void loadCancelButtonClicked(View view) {
         loadIsCard = false;
         resetLoadCard();
-    }
-
-    public void createCancelButtonClicked(View view) {
-        createIsCard = false;
-        resetCreateCard();
     }
 }

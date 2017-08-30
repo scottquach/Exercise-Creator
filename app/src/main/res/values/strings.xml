@@ -8,6 +8,7 @@
     <string name="error_loading_routine">Error loading routine</string>
     <string name="blank_field">Field cannot be blank</string>
     <string name="name_already_exists">That name already exists</string>
+    <string name="name_invalid_format">Name must not start with number or contain special characters ("?",".")</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="load_exercise">Load Exercise</string>
@@ -24,6 +25,7 @@
     <string name="about">About</string>
     <string name="my_email">scottqglobal@gmail.com</string>
     <string name="my_github">https://github.com/scottquach</string>
+    <string name="delete_in_edit_mode">Please switch to edit mode to delete a row</string>
 
     <string-array name="licenses">
         <item>https://github.com/thepacific/rx2-timer</item>
