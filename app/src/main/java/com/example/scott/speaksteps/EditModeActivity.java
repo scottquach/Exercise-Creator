@@ -228,7 +228,6 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
     @Override
     public void createBreak(int minutes, int seconds) {
         int totalSeconds = convertToSeconds(minutes, seconds);
-        Toast.makeText(EditModeActivity.this, "Minutes :" + String.valueOf(minutes) + " Seconds :" + String.valueOf(seconds), Toast.LENGTH_SHORT).show();
         entries.add("Minutes: " + String.valueOf(minutes) + " Seconds: " + String.valueOf(seconds));
         breakValues.add(totalSeconds);
         entryType.add(KeyConstants.BREAK);

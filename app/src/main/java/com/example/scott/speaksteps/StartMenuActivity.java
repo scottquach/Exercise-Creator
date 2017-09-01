@@ -68,7 +68,7 @@ public class StartMenuActivity extends BaseDataActivity {
         return true;
     }
 
-    /*Returns an ArrayLists of the names of
+    /**Returns an ArrayLists of the names of
       saved exercises
     */
     private ArrayList<String> loadExerciseNames() {
