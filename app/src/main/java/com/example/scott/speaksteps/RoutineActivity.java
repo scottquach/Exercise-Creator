@@ -1,31 +1,44 @@
 package com.example.scott.speaksteps;
 
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.scott.speaksteps.database.KeyConstants;
 import com.example.scott.speaksteps.databinding.ActivityRoutineBinding;
+import com.example.scott.speaksteps.services.RoutineService;
 import com.pacific.timer.Rx2Timer;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import timber.log.Timber;
+
+import static com.example.scott.speaksteps.Constants.BUTTON_TOGGLE_PAUSE;
+import static com.example.scott.speaksteps.Constants.BUTTON_TOGGLE_PLAY;
+import static com.example.scott.speaksteps.Constants.BUTTON_TOGGLE_RESET;
 
 public class RoutineActivity extends BaseDataActivity {
 
@@ -37,36 +50,25 @@ public class RoutineActivity extends BaseDataActivity {
     private ArrayList<Integer> breakValues = new ArrayList<>();
     private ArrayList<Integer> entryType = new ArrayList<>(); //0 represents a task, 1 represents a break
 
-    private TextToSpeech tts;
-
-    private int step = 0;
     private int exerciseSize = 0;
 
     private int playButtonActionToggle = 0;
-    private final static int BUTTON_TOGGLE_PLAY = 0;
-    private final static int BUTTON_TOGGLE_PAUSE = 1;
-    private final static int BUTTON_TOGGLE_RESET = 3;
 
-    Rx2Timer timer;
+    RoutineSyncReceiver receiver;
 
-    ActivityRoutineBinding binding;
+    private RoutineService routineService;
+    private boolean isBounded = false;
+
+    private ActivityRoutineBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_routine);
-
         setupWindowTransitions();
 
-        //initialization
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    tts.setLanguage(Locale.US);
-                }
-            }
-        });
+        //Manually reset
+        playButtonActionToggle = Constants.BUTTON_TOGGLE_PLAY;
 
         //get exercise name to load
         Bundle bundle = getIntent().getExtras();
@@ -86,20 +88,22 @@ public class RoutineActivity extends BaseDataActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        receiver = new RoutineSyncReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("routine_update");
+        registerReceiver(receiver, filter);
 
+        if (routineService == null) {
+            startRoutineService();
+        } else {
+            handleActivityResumedState();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-       tts.stop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        tts.stop();
-        tts.shutdown();
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -173,88 +177,50 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     private void updateProgressIndicators() {
-        if (step != 0) {
-            binding.recycleViewRoutines.findViewHolderForAdapterPosition(step - 1).itemView.findViewById(R.id.row_card_view)
-                    .setBackgroundColor(getResources().getColor(R.color.primary_light));
-        }
-        binding.recycleViewRoutines.findViewHolderForAdapterPosition(step).itemView.findViewById(R.id.row_card_view)
-                .setBackgroundColor(getResources().getColor(R.color.grey));
-    }
-
-    private void determineNextStep() {
-
-        if (step < exerciseSize) {
-            updateProgressIndicators();
-            if (entryType.get(step) == 0) {
-                Timber.d("current type is 0");
-                playTask(entries.get(step));
-            } else if (entryType.get(step) == 1) {
-                Timber.d("current type is 1");
-                startBreak(Integer.valueOf(breakValues.get(step)));
-            }
-        } else {
-            //Called when the routine has been complete
-            playButtonActionToggle = BUTTON_TOGGLE_RESET;
-            binding.buttonPlay.setImageResource(R.drawable.ic_reset);
-        }
-
-    }
-
-    private void breakComplete() {
-        step++;
-        determineNextStep();
-    }
-
-    private void playTask(String task) {
-        tts.speak(task, TextToSpeech.QUEUE_ADD, null);
-        step++;
-        determineNextStep();
-    }
-
-    private void startBreak(int totalSeconds) {
-        timer = Rx2Timer.builder()
-                .initialDelay(0) //default is 0
-                .period(1) //default is 1
-                .take(totalSeconds) //default is 60
-                .onCount(count -> {
-
-                })
-                .onComplete(() -> breakComplete())
-                .build();
-
-        timer.start();
+        adapter.setStep(RoutineService.step);
+        adapter.resetTracker();
+        adapter.notifyDataSetChanged();
     }
 
     private void pauseProgress() {
-        timer.pause();
+        RoutineService.pauseProgress();
     }
 
     private void resumeProgress() {
-        timer.resume();
+        RoutineService.resumeProgress();
     }
 
     private void resetProgress() {
-        step = 0;
-        for (int i = 0; i < exerciseSize; i++) {
-            binding.recycleViewRoutines.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.row_card_view)
-                    .setBackgroundColor(getResources().getColor(R.color.backgroundColor));
-        }
+        RoutineService.resetRoutine();
+        adapter.setStep(RoutineService.step);
+        adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Handles the different states for the play button. Such as whether to play, pause, or restart
+     *
+     * @param view
+     */
     public void playButtonClicked(View view) {
         switch (playButtonActionToggle) {
             case BUTTON_TOGGLE_PLAY:
                 playButtonActionToggle = BUTTON_TOGGLE_PAUSE;
+                BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PAUSE).apply();
                 binding.buttonPlay.setImageResource(R.drawable.ic_pause);
-                if (timer != null && timer.isPause()) {
-                    resumeProgress();
-                } else determineNextStep();
+                if (routineService != null) {
+                    if (routineService.isTimerPaused()) {
+                        Timber.d("called timer paused");
+                        resumeProgress();
+                    } else routineService.startRoutine(); Timber.d("started new routine");
+                }
+
                 Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_PLAYED,
                         Instrumentation.TrackParams.SUCCESS);
                 break;
 
             case BUTTON_TOGGLE_PAUSE:
                 playButtonActionToggle = BUTTON_TOGGLE_PLAY;
+                BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY).apply();
                 binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
                 pauseProgress();
                 Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_PAUSED,
@@ -263,8 +229,10 @@ public class RoutineActivity extends BaseDataActivity {
 
             case BUTTON_TOGGLE_RESET:
                 playButtonActionToggle = BUTTON_TOGGLE_PLAY;
+                BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY).apply();
                 binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
                 resetProgress();
+                startRoutineService();
                 Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_RESET,
                         Instrumentation.TrackParams.SUCCESS);
                 break;
@@ -272,11 +240,90 @@ public class RoutineActivity extends BaseDataActivity {
     }
 
     public void editModeButtonClicked(View view) {
+        stopRoutineService();
+        BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY).apply();
+
         View sharedPlayView = (FloatingActionButton) findViewById(R.id.button_play);
         ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(RoutineActivity.this, sharedPlayView, getString(R.string.transition_button_play));
 
         Intent openEditMode = new Intent(RoutineActivity.this, EditModeActivity.class);
         openEditMode.putExtra(KeyConstants.NAME, exerciseName);
         startActivity(openEditMode, transitionActivityOptions.toBundle());
+    }
+
+    /**
+     * Handles when a routine is running in the background
+     * and the user left and then returned to the activity
+     */
+    private void handleActivityResumedState() {
+        adapter.setStep(RoutineService.step);
+        adapter.resetTracker();
+        adapter.notifyDataSetChanged();
+
+        Timber.d("step is " + RoutineService.step);
+
+
+        playButtonActionToggle = BaseApplication.getInstance().getAppPrefs().getInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY);
+        switch (playButtonActionToggle) {
+            case BUTTON_TOGGLE_PLAY:
+                binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
+                break;
+            case BUTTON_TOGGLE_PAUSE:
+                binding.buttonPlay.setImageResource(R.drawable.ic_pause);
+                break;
+            case BUTTON_TOGGLE_RESET:
+                binding.buttonPlay.setImageResource(R.drawable.ic_reset);
+                break;
+        }
+    }
+
+    private void startRoutineService() {
+        adapter.resetTracker();
+        if (routineService == null) {
+            Intent serviceIntent = new Intent(this, RoutineService.class);
+            serviceIntent.putExtra("name", exerciseName);
+            serviceIntent.putStringArrayListExtra("entries", entries);
+            serviceIntent.putIntegerArrayListExtra("breakValues", breakValues);
+            serviceIntent.putIntegerArrayListExtra("entryType", entryType);
+            startService(serviceIntent);
+            bindService(serviceIntent, routineConnection, BIND_AUTO_CREATE);
+        }
+    }
+
+    private void stopRoutineService() {
+        if (routineService != null) {
+            routineService.stopForegroundService();
+            routineService.resetRoutine();
+        }
+    }
+
+    private ServiceConnection routineConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            RoutineService.RoutineBinder binder = (RoutineService.RoutineBinder) iBinder;
+            routineService = binder.getService();
+            isBounded = true;
+            Timber.d("RoutineService connected");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            isBounded = false;
+            Timber.d("RoutineService disconnected");
+        }
+    };
+
+    public class RoutineSyncReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!intent.getExtras().getBoolean("isFinished")) {
+                updateProgressIndicators();
+            } else {
+                playButtonActionToggle = BUTTON_TOGGLE_RESET;
+                BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_RESET).apply();
+                binding.buttonPlay.setImageResource(R.drawable.ic_reset);
+                stopRoutineService();
+            }
+        }
     }
 }
