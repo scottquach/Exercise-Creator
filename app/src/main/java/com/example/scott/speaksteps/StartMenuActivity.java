@@ -20,12 +20,6 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
-/*
-Research resources used
-https://android.jlelse.eu/make-your-app-shine-2-how-to-make-a-button-morph-into-a-form-81d2f0e6bf4a
-http://www.uwanttolearn.com/android/constraint-layout-animations-dynamic-constraints-ui-java-hell/
- */
-
 public class StartMenuActivity extends BaseDataActivity {
 
     private ConstraintSet originalConstraint = new ConstraintSet();

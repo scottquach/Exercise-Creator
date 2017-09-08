@@ -26,10 +26,15 @@
     <string name="my_email">scottqglobal@gmail.com</string>
     <string name="my_github">https://github.com/scottquach</string>
     <string name="delete_in_edit_mode">Please switch to edit mode to delete a row</string>
+    <string name="edit">Edit</string>
+    <string name="stop">Stop</string>
+    <string name="delete">Delete</string>
+    <string name="add_break">Add Break</string>
+    <string name="create_task">Create Task</string>
 
     <string-array name="licenses">
         <item>https://github.com/thepacific/rx2-timer</item>
-        <item>https://github.com/futuresimple/android-floating-action-button</item>
+        <item>https://github.com/Clans/FloatingActionButton</item>
         <item>https://github.com/JakeWharton/timber</item>
     </string-array>
 </resources>

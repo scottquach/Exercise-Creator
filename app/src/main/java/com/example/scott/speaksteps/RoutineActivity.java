@@ -1,6 +1,6 @@
 package com.example.scott.speaksteps;
 
-import android.app.ActivityManager;
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -12,8 +12,6 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,12 +25,8 @@ import android.widget.Toast;
 import com.example.scott.speaksteps.database.KeyConstants;
 import com.example.scott.speaksteps.databinding.ActivityRoutineBinding;
 import com.example.scott.speaksteps.services.RoutineService;
-import com.pacific.timer.Rx2Timer;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import timber.log.Timber;
 
@@ -67,9 +61,6 @@ public class RoutineActivity extends BaseDataActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_routine);
         setupWindowTransitions();
 
-        //Manually reset
-        playButtonActionToggle = Constants.BUTTON_TOGGLE_PLAY;
-
         //get exercise name to load
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -95,6 +86,7 @@ public class RoutineActivity extends BaseDataActivity {
 
         if (routineService == null) {
             startRoutineService();
+            handleActivityResumedState();
         } else {
             handleActivityResumedState();
         }
@@ -176,6 +168,9 @@ public class RoutineActivity extends BaseDataActivity {
         exerciseSize = entries.size();
     }
 
+    /**Will update the Recycler View with shaded colors
+     * to indicate the routines progress
+     */
     private void updateProgressIndicators() {
         adapter.setStep(RoutineService.step);
         adapter.resetTracker();
@@ -212,7 +207,7 @@ public class RoutineActivity extends BaseDataActivity {
                         Timber.d("called timer paused");
                         resumeProgress();
                     } else routineService.startRoutine(); Timber.d("started new routine");
-                }
+                } else Timber.d("Routine service was null");
 
                 Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_PLAYED,
                         Instrumentation.TrackParams.SUCCESS);
@@ -251,17 +246,21 @@ public class RoutineActivity extends BaseDataActivity {
         startActivity(openEditMode, transitionActivityOptions.toBundle());
     }
 
+    public void stopButtonClicked(View view) {
+        stopRoutineService();
+        playButtonActionToggle = BUTTON_TOGGLE_PLAY;
+        BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY).apply();
+        binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
+        resetProgress();
+        startRoutineService();    }
+
     /**
      * Handles when a routine is running in the background
      * and the user left and then returned to the activity
      */
     private void handleActivityResumedState() {
-        adapter.setStep(RoutineService.step);
-        adapter.resetTracker();
-        adapter.notifyDataSetChanged();
-
+        updateProgressIndicators();
         Timber.d("step is " + RoutineService.step);
-
 
         playButtonActionToggle = BaseApplication.getInstance().getAppPrefs().getInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY);
         switch (playButtonActionToggle) {
@@ -317,6 +316,8 @@ public class RoutineActivity extends BaseDataActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!intent.getExtras().getBoolean("isFinished")) {
+                Timber.d("Received update broadcast");
+
                 updateProgressIndicators();
             } else {
                 playButtonActionToggle = BUTTON_TOGGLE_RESET;
