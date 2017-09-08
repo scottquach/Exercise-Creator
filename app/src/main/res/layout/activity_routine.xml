@@ -44,12 +44,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        app:menu_icon="@drawable/ic_plus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:menu_colorNormal="@color/white"
         app:menu_colorPressed="@color/primary_light"
         app:menu_colorRipple="@color/primary_light"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:menu_icon="@drawable/ic_plus">
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"

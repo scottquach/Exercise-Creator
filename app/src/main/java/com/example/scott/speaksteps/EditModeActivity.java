@@ -149,7 +149,7 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
 
     }
 
-    /*Retrieves the specified exercises data from the db and
+    /**Retrieves the specified exercises data from the db and
     indexes them into arrayLists, with the entryType list discerning
     between tasks and breaks
      */
@@ -172,14 +172,12 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         dataCursor.close();
     }
 
-    /*Saves the edited data back into
+    /**Saves the edited data back into
     the db
      */
     private void saveData(){
         dbHelper.saveRoutineEdits(exerciseName, entries, breakValues, entryType);
     }
-
-
 
     private int convertToSeconds(int minute, int seconds){
         int totalSeconds;
@@ -221,6 +219,7 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         breakValues.add(0);
         entryType.add(KeyConstants.TASK);
         updateRecycleView();
+        saveData();
         Instrumentation.getInstance().track(Instrumentation.TrackEvents.ADD_TASK,
             Instrumentation.TrackParams.SUCCESS);
     }
@@ -232,6 +231,7 @@ public class EditModeActivity extends BaseDataActivity implements BreakDialogFra
         breakValues.add(totalSeconds);
         entryType.add(KeyConstants.BREAK);
         updateRecycleView();
+        saveData();
         Instrumentation.getInstance().track(Instrumentation.TrackEvents.ADD_BREAK,
                 Instrumentation.TrackParams.SUCCESS);
     }

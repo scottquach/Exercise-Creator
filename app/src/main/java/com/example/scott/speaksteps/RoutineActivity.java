@@ -1,6 +1,5 @@
 package com.example.scott.speaksteps;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -44,14 +43,11 @@ public class RoutineActivity extends BaseDataActivity {
     private ArrayList<Integer> breakValues = new ArrayList<>();
     private ArrayList<Integer> entryType = new ArrayList<>(); //0 represents a task, 1 represents a break
 
-    private int exerciseSize = 0;
-
     private int playButtonActionToggle = 0;
 
-    RoutineSyncReceiver receiver;
+    private RoutineSyncReceiver receiver;
 
     private RoutineService routineService;
-    private boolean isBounded = false;
 
     private ActivityRoutineBinding binding;
 
@@ -61,7 +57,7 @@ public class RoutineActivity extends BaseDataActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_routine);
         setupWindowTransitions();
 
-        //get exercise name to load
+        //Load necessary data
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             exerciseName = bundle.getString("name").replaceAll("\\s+", "");
@@ -165,7 +161,6 @@ public class RoutineActivity extends BaseDataActivity {
                 Timber.d("Entry: " + entry + " dataValue: " + dataValue + " Type: " + entryType);
             } while (dataCursor.moveToNext());
         }
-        exerciseSize = entries.size();
     }
 
     /**Will update the Recycler View with shaded colors
@@ -188,6 +183,7 @@ public class RoutineActivity extends BaseDataActivity {
     private void resetProgress() {
         RoutineService.resetRoutine();
         adapter.setStep(RoutineService.step);
+        adapter.resetTracker();
         adapter.notifyDataSetChanged();
     }
 
@@ -206,7 +202,11 @@ public class RoutineActivity extends BaseDataActivity {
                     if (routineService.isTimerPaused()) {
                         Timber.d("called timer paused");
                         resumeProgress();
-                    } else routineService.startRoutine(); Timber.d("started new routine");
+                    } else {
+                        routineService.stopForegroundService();
+                        resetProgress();
+                        routineService.startRoutine();
+                    } Timber.d("started new routine");
                 } else Timber.d("Routine service was null");
 
                 Instrumentation.getInstance().track(Instrumentation.TrackEvents.ROUTINE_PLAYED,
@@ -252,7 +252,8 @@ public class RoutineActivity extends BaseDataActivity {
         BaseApplication.getInstance().getAppPrefs().edit().putInt(Constants.BUTTON_TOGGLE, BUTTON_TOGGLE_PLAY).apply();
         binding.buttonPlay.setImageResource(R.drawable.ic_play_arrow);
         resetProgress();
-        startRoutineService();    }
+        startRoutineService();
+    }
 
     /**
      * Handles when a routine is running in the background
@@ -276,6 +277,9 @@ public class RoutineActivity extends BaseDataActivity {
         }
     }
 
+    /**Gets the routine service read to begin a routine, but does
+     * not actually start the routine itself, but simply passes data over and binds service
+     */
     private void startRoutineService() {
         adapter.resetTracker();
         if (routineService == null) {
@@ -301,13 +305,11 @@ public class RoutineActivity extends BaseDataActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             RoutineService.RoutineBinder binder = (RoutineService.RoutineBinder) iBinder;
             routineService = binder.getService();
-            isBounded = true;
             Timber.d("RoutineService connected");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            isBounded = false;
             Timber.d("RoutineService disconnected");
         }
     };
@@ -316,8 +318,6 @@ public class RoutineActivity extends BaseDataActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!intent.getExtras().getBoolean("isFinished")) {
-                Timber.d("Received update broadcast");
-
                 updateProgressIndicators();
             } else {
                 playButtonActionToggle = BUTTON_TOGGLE_RESET;
