@@ -11,4 +11,8 @@ public class Constants {
     public final static int BUTTON_TOGGLE_PLAY = 0;
     public final static int BUTTON_TOGGLE_PAUSE = 1;
     public final static int BUTTON_TOGGLE_RESET = 3;
+
+    public final static String ROUTINE_IS_RUNNING = "routine_is_running";
+
+    public final static String ROUTINE_STEP = "routine_step";
 }

@@ -3,9 +3,11 @@ package com.example.scott.speaksteps.services;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -41,6 +43,8 @@ public class RoutineService extends Service {
 
     public static int step = 0;
     private int exerciseSize = 0;
+
+    PowerManager.WakeLock wakeLock;
 
     private final IBinder routineBinder = new RoutineBinder();
 
@@ -95,10 +99,18 @@ public class RoutineService extends Service {
     }
 
     public void startRoutine() {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "routine_wake_lock");
+              wakeLock.acquire();
         startForegroundService();
         determineNextStep();
+
     }
 
+    /**
+     * Will determine whether to start a break, task,
+     * or if the routine is done
+     */
     private void determineNextStep() {
         if (step < exerciseSize) {
             sendUpdateBroadcast(false);
@@ -166,6 +178,12 @@ public class RoutineService extends Service {
         determineNextStep();
     }
 
+    /**
+     * Updates the RoutineActivity on routine progress so that it can update
+     * the UI
+     *
+     * @param isFinished
+     */
     private void sendUpdateBroadcast(boolean isFinished) {
         Intent broadcastIntent = new Intent("routine_update");
         broadcastIntent.putExtra("step", step);
@@ -191,6 +209,9 @@ public class RoutineService extends Service {
     }
 
     public void stopForegroundService() {
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
         stopForeground(true);
         stopSelf();
     }
