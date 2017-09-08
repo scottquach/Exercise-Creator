@@ -30,12 +30,12 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            app:menu_icon="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:menu_colorNormal="@color/white"
             app:menu_colorPressed="@color/primary_light"
             app:menu_colorRipple="@color/primary_light"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:menu_icon="@drawable/ic_plus">
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/button_add_task"
@@ -43,10 +43,10 @@
                 android:layout_height="wrap_content"
                 android:onClick="createTaskClicked"
                 android:src="@drawable/ic_task"
-                app:fab_colorPressed="@color/primary_light"
                 app:fab_colorNormal="@color/white"
-                app:fab_size="mini"
-                app:fab_label="@string/create_task" />
+                app:fab_colorPressed="@color/primary_light"
+                app:fab_label="@string/create_task"
+                app:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/button_add_break"
@@ -54,10 +54,10 @@
                 android:layout_height="wrap_content"
                 android:onClick="createBreakClicked"
                 android:src="@drawable/ic_break"
-                app:fab_colorPressed="@color/primary_light"
                 app:fab_colorNormal="@color/white"
-                app:fab_size="mini"
-                app:fab_label="@string/add_break" />
+                app:fab_colorPressed="@color/primary_light"
+                app:fab_label="@string/add_break"
+                app:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/button_delete"
@@ -65,10 +65,10 @@
                 android:layout_height="wrap_content"
                 android:onClick="deleteButtonClicked"
                 android:src="@drawable/ic_delete"
-                app:fab_colorPressed="@color/primary_light"
                 app:fab_colorNormal="@color/white"
-                app:fab_size="mini"
-                app:fab_label="@string/delete" />
+                app:fab_colorPressed="@color/primary_light"
+                app:fab_label="@string/delete"
+                app:fab_size="mini" />
 
         </com.github.clans.fab.FloatingActionMenu>
 

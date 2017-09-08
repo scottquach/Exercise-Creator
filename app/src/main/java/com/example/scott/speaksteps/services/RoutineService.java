@@ -78,7 +78,6 @@ public class RoutineService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -98,13 +97,17 @@ public class RoutineService extends Service {
         }
     }
 
+    // TODO: 9/8/2017 transition to alarmmanager instead of wakelock
+
+    /**Starts the routine and acquires a necessary wakelock
+     *
+     */
     public void startRoutine() {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "routine_wake_lock");
               wakeLock.acquire();
         startForegroundService();
         determineNextStep();
-
     }
 
     /**
@@ -192,6 +195,9 @@ public class RoutineService extends Service {
         sendBroadcast(broadcastIntent);
     }
 
+    /**Starts this service as a foreground service as required by Android O
+     *
+     */
     private void startForegroundService() {
         Intent notificationIntent = new Intent(this, RoutineActivity.class);
         notificationIntent.putExtra("name", exerciseName);
@@ -208,6 +214,9 @@ public class RoutineService extends Service {
         Timber.d("starting foreground service");
     }
 
+    /**Stops the foreground service and releases held wakelocks if any
+     *
+     */
     public void stopForegroundService() {
         if (wakeLock != null && wakeLock.isHeld()) {
             wakeLock.release();
